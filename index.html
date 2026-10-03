@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bose–Einstein Condensation, Interactively</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#EDF1F4; --surface:#F8FAFC; --ink:#15202B; --muted:#56636F; --rule:#C5CFD7; --band:#E2E8ED;
+  --cond:#2F4FC4; --exc:#C8781A; --dist:#2E7A57; --res:#8B98A4; --warn:#C0392B;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E151C; --surface:#141D26; --ink:#E3E9EE; --muted:#97A4B0; --rule:#2B3743; --band:#1B2631;
+    --cond:#7F9BFF; --exc:#F0B45C; --dist:#5CC593; --res:#5B6976; --warn:#FF7A66;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E151C; --surface:#141D26; --ink:#E3E9EE; --muted:#97A4B0; --rule:#2B3743; --band:#1B2631;
+  --cond:#7F9BFF; --exc:#F0B45C; --dist:#5CC593; --res:#5B6976; --warn:#FF7A66;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:1.1rem;line-height:1.62;-webkit-font-smoothing:antialiased}
+img,canvas{max-width:100%}
+a{color:var(--cond)}
+:focus-visible{outline:2px solid var(--cond);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 clamp(1rem,4vw,2.5rem)}
+.prose{max-width:40rem}
+
+header.hero{padding:clamp(2.5rem,7vw,5rem) 0 1.5rem}
+.credit{font-family:var(--sans);font-size:.9rem;color:var(--muted);margin:0 0 1.25rem}
+h1{font-weight:500;font-size:clamp(2.5rem,7.5vw,5.25rem);line-height:.98;letter-spacing:-.025em;margin:0 0 1.25rem;max-width:12ch}
+.lede{font-size:clamp(1.15rem,2.2vw,1.35rem);max-width:37rem;margin:0}
+
+section{padding:clamp(2.5rem,6vw,4rem) 0;border-top:1px solid var(--rule)}
+section:first-of-type{border-top:0;padding-top:1rem}
+h2{font-weight:500;font-size:clamp(1.7rem,3.5vw,2.35rem);line-height:1.1;letter-spacing:-.015em;margin:0 0 1rem}
+h3{font-family:var(--sans);font-weight:600;font-size:1rem;margin:1.75rem 0 .5rem}
+p{margin:0 0 1rem}
+.note{font-size:.95rem;color:var(--muted)}
+blockquote{margin:1.25rem 0;padding-left:1rem;border-left:3px solid var(--cond);font-style:italic}
+
+.eq{display:block;text-align:center;margin:1.25rem 0;overflow-x:auto;overflow-y:hidden;padding:.25rem 0}
+mjx-container{color:inherit}
+mjx-container[display="true"]{margin:0 !important}
+.stats mjx-container,.legend mjx-container,.cap mjx-container,.ctl small mjx-container{font-size:105%}
+.ctl output mjx-container{font-size:95%}
+.boxed{display:inline-block;border:1.5px solid var(--cond);padding:.5rem 1rem;border-radius:3px}
+
+.fig{display:grid;grid-template-columns:minmax(0,1fr) 17.5rem;gap:1.5rem;align-items:start;margin-top:1.5rem}
+@media (max-width:820px){.fig{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:1rem}
+.canvas-holder{background:var(--surface);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+canvas{display:block;width:100%}
+
+.ctl{font-family:var(--sans);font-size:.9rem;margin-bottom:1.1rem}
+.ctl:last-child{margin-bottom:0}
+.ctl label{display:flex;justify-content:space-between;align-items:baseline;gap:.75rem;font-weight:500;margin-bottom:.3rem}
+.ctl .lt{flex:1 1 auto}
+.ctl output{flex:0 0 auto;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted);font-weight:400}
+.ctl small{display:block;color:var(--muted);line-height:1.4;margin-top:.25rem}
+input[type=range]{width:100%;accent-color:var(--cond);margin:0}
+select{font-family:var(--sans);font-size:.9rem;color:var(--ink);background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:.4rem .5rem;width:100%}
+.btns{display:flex;flex-wrap:wrap;gap:.5rem}
+button{font-family:var(--sans);font-size:.88rem;font-weight:500;color:var(--ink);background:transparent;border:1px solid var(--rule);border-radius:4px;padding:.45rem .8rem;cursor:pointer}
+button:hover{border-color:var(--ink)}
+button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:disabled{opacity:.5;cursor:progress}
+
+.stats{font-family:var(--sans);font-size:.9rem;display:grid;grid-template-columns:auto auto;gap:.35rem 1rem;margin:0}
+.stats dt{color:var(--muted)}
+.stats dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;font-weight:500;white-space:nowrap}
+.stats .sep{grid-column:1/-1;border-top:1px solid var(--rule);margin:.3rem 0}
+.legend{font-family:var(--sans);font-size:.85rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:1rem;margin:.6rem 0 0;align-items:center}
+.swatch{display:inline-block;width:.75rem;height:.75rem;border-radius:2px;vertical-align:-1px;margin-right:.35rem}
+.swatch.line{height:3px;width:1.1rem;vertical-align:3px;border-radius:0}
+.swatch.dash{height:0;width:1.1rem;vertical-align:3px;border-radius:0;border-top:3px dashed}
+.cap{font-family:var(--sans);font-size:.85rem;color:var(--muted);margin:.5rem .25rem 0}
+.verdict{font-family:var(--sans);font-size:1rem;font-weight:500;margin:.85rem 0 0;max-width:40rem}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1.25rem}
+@media (max-width:700px){.two{grid-template-columns:1fr}}
+.big{font-size:clamp(2.4rem,6vw,3.6rem);line-height:1;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums;margin:.1rem 0 .3rem}
+
+footer{border-top:1px solid var(--rule);padding:2rem 0 3rem;font-family:var(--sans);font-size:.9rem;color:var(--muted)}
+footer p{margin:0 0 .4rem}
+</style>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  svg: { fontCache: 'global' },
+  options: { enableMenu: false }
+};
+</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <p class="credit">An interactive demo created by Claude Opus 5.5, based on the lecture notes by Sang Hoon Lee (Chapter 7, Section 7.6, Bose–Einstein Condensation)</p>
+  <h1>Bose–Einstein Condensation</h1>
+  <p class="lede">Cool a gas of identical bosons and, below a critical temperature, a macroscopic fraction of the atoms abruptly piles into the single lowest-energy state. No need to reach absolute zero. The reason lies in how identical particles are counted.</p>
+</header>
+
+<!-- ============ FIXED NUMBER ============ -->
+<section id="fixed" aria-labelledby="h-fixed">
+  <h2 id="h-fixed">Bosons whose number is fixed</h2>
+  <div class="prose">
+    <p>Photons and phonons can be created freely, so their \(\mu = 0\). Now consider more ordinary bosons, such as atoms with integer spin, whose number is fixed from the outset. Then \(\mu\) is a nontrivial function of density and temperature. At \(T = 0\), trivially, every atom is in the ground state. In a box of volume \(V = L^3\) that state has energy</p>
+    <div class="eq">\[ \varepsilon_0 = \frac{h^2}{8mL^2}\left(1^2 + 1^2 + 1^2\right) = \frac{3h^2}{8mL^2} \]</div>
+    <p>and at any temperature the average number of atoms in it is</p>
+    <div class="eq">\[ N_0 = \frac{1}{e^{(\varepsilon_0-\mu)/k_{\mathrm{B}}T} - 1} \approx \frac{k_{\mathrm{B}}T}{\varepsilon_0 - \mu} \quad\text{when } N_0 \gg 1 \]</div>
+    <p>For \(N_0\) to be large, \(\mu\) must sit a tiny bit below \(\varepsilon_0\); at \(T = 0\), \(\mu = \varepsilon_0\). The question is how low the temperature must be for that to happen.</p>
+  </div>
+</section>
+
+<!-- ============ FINDING MU ============ -->
+<section id="mu" aria-labelledby="h-mu">
+  <h2 id="h-mu">Finding the chemical potential</h2>
+  <div class="prose">
+    <p>The condition that fixes \(\mu\) is that the occupancies of all states add up to \(N\). Converting the sum to an integral with the density of states (half that of the electrons in Section 7.3, since these bosons have spin zero),</p>
+    <div class="eq">\[ N = \int_0^\infty g(\varepsilon)\,\frac{1}{e^{(\varepsilon-\mu)/k_{\mathrm{B}}T} - 1}\,d\varepsilon, \qquad g(\varepsilon) = \frac{2}{\sqrt{\pi}}\left(\frac{2\pi m}{h^2}\right)^{3/2} V\sqrt{\varepsilon} \]</div>
+    <p>This can’t be done analytically, so try \(\mu = 0\), which should work at very low temperature:</p>
+    <div class="eq">\[ N = \frac{2}{\sqrt{\pi}}\left(\frac{2\pi m k_{\mathrm{B}}T}{h^2}\right)^{3/2} V\int_0^\infty\frac{\sqrt{x}\,dx}{e^x - 1} = 2.612\left(\frac{2\pi m k_{\mathrm{B}}T}{h^2}\right)^{3/2} V \]</div>
+    <p>This is absurd as it stands, since \(N\) can’t grow as \(T^{3/2}\). It is correct for exactly one temperature, the condensation temperature:</p>
+    <div class="eq"><span class="boxed">\( \displaystyle k_{\mathrm{B}}T_c = 0.527\left(\frac{h^2}{2\pi m}\right)\left(\frac{N}{V}\right)^{2/3} \)</span></div>
+    <p>Above \(T_c\), \(\mu\) must be negative: a negative \(\mu\) makes the denominator larger, compensating for the rising \(T\). Below \(T_c\), the integral fails. Near \(\varepsilon = 0\), \(\sqrt{\varepsilon}/(e^{\varepsilon/k_{\mathrm{B}}T}-1) \approx k_{\mathrm{B}}T/\sqrt{\varepsilon} \to \infty\), a spike that doesn’t represent the sum over the actual, discretely spaced states. The integral still correctly counts atoms in the vast majority of states, with \(\varepsilon \gg \varepsilon_0\), so it gives the number of atoms in <em>excited</em> states, and the rest must be in the ground state:</p>
+    <div class="eq"><span class="boxed">\( \displaystyle N_{\text{excited}} = \left(\frac{T}{T_c}\right)^{3/2} N, \qquad N_0 = \left[1 - \left(\frac{T}{T_c}\right)^{3/2}\right] N \quad (T < T_c) \)</span></div>
+  </div>
+
+  <div class="fig">
+    <div>
+      <div class="canvas-holder"><canvas id="triCanvas" aria-label="Density of states times Bose-Einstein distribution equals the particle distribution, with the ground-state population shown separately"></canvas></div>
+      <p class="cap">Energies in units of \(k_{\mathrm{B}}T_c\). The shaded area is \(N_{\text{excited}}/N\); the bar at \(\varepsilon = 0\) is the condensate, \(N_0/N\), which no smooth curve can represent.</p>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <label for="tS"><span class="lt">\(T/T_c\)</span> <output id="tOut"></output></label>
+        <input type="range" id="tS" min="0.02" max="2" step="0.01" value="0.6">
+      </div>
+      <div class="big" id="n0Big">–</div>
+      <p class="cap" style="margin:0 0 1rem">of the atoms are in the ground state</p>
+      <dl class="stats">
+        <dt>\(N_{\text{excited}}/N\)</dt><dd id="nEx">–</dd>
+        <dt>\(\mu/k_{\mathrm{B}}T_c\)</dt><dd id="muV">–</dd>
+      </dl>
+      <p class="cap" style="margin:.75rem 0 0">Above \(T_c\), \(\mu\) is found numerically, by guessing values until the integral equals \(N\).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRANSITION ============ -->
+<section id="transition" aria-labelledby="h-transition">
+  <h2 id="h-transition">A phase transition</h2>
+  <div class="prose">
+    <p>Above \(T_c\), \(\mu < 0\) and essentially all of the atoms are in excited states. Below \(T_c\), \(\mu \approx 0\) and atoms accumulate abruptly in the ground state. \(N_0(T)\) is continuous but not differentiable at \(T_c\): a phase transition, Bose–Einstein condensation (BEC). These charts follow the slider above.</p>
+  </div>
+  <div class="two">
+    <div>
+      <div class="canvas-holder"><canvas id="nCanvas" aria-label="Ground-state and excited-state populations versus temperature"></canvas></div>
+      <div class="legend">
+        <span><span class="swatch line" style="background:var(--cond)"></span>\(N_0/N\)</span>
+        <span><span class="swatch line" style="background:var(--exc)"></span>\(N_{\text{excited}}/N\)</span>
+      </div>
+    </div>
+    <div>
+      <div class="canvas-holder"><canvas id="muCanvas" aria-label="Chemical potential versus temperature"></canvas></div>
+      <p class="cap">\(\mu/k_{\mathrm{B}}T_c\): zero below \(T_c\), falling away above it.</p>
+    </div>
+  </div>
+  <div class="prose" style="margin-top:1.5rem">
+    <p>With the quantum volume \(v_Q = (h^2/2\pi mk_{\mathrm{B}}T)^{3/2}\), the condition at \(T_c\) reads \(N/V = 2.612/v_Q\): condensation begins just as the atoms’ wavefunctions start to overlap significantly.</p>
+  </div>
+
+  <h3>Real boxes hold finitely many atoms</h3>
+  <div class="prose">
+    <p>The sharp kink belongs to the limit of infinitely many atoms. The lecture notes point out that for a finite number, there is a range of temperatures just below \(T_c\) where the simple picture isn’t accurate (Problem 7.66), and it need not be narrow. Here the sum over the actual box states, \(\varepsilon = (h^2/8mL^2)(n_x^2+n_y^2+n_z^2)\), is done exactly, solving for \(\mu\) at each temperature.</p>
+  </div>
+  <div class="fig">
+    <div>
+      <div class="canvas-holder"><canvas id="finCanvas" aria-label="Exact condensate fraction for a finite number of atoms compared with the infinite limit"></canvas></div>
+      <div class="legend">
+        <span><span class="swatch line" style="background:var(--cond)"></span>Exact sum, \(N\) atoms</span>
+        <span><span class="swatch dash" style="border-color:var(--ink)"></span>\(1 - (T/T_c)^{3/2}\), infinitely many atoms</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ctl btns" role="group" aria-label="Number of atoms" id="finBtns"></div>
+      <p class="cap" id="finStatus" style="margin:0 0 .75rem"></p>
+      <dl class="stats">
+        <dt>\(N_0/N\) at \(T = T_c\)</dt><dd id="finTc">–</dd>
+        <dt>\(N_0/N\) at \(T = 0.8\,T_c\)</dt><dd id="fin08">–</dd>
+        <dt>Infinite-\(N\) value at \(0.8\,T_c\)</dt><dd>0.284</dd>
+      </dl>
+      <p class="cap" style="margin:.75rem 0 0">The box walls remove low-lying states compared with the smooth \(g(\varepsilon)\), so the excited states fill up sooner and condensation sets in above \(T_c\). The curve sharpens only slowly as \(N\) grows.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SCALES ============ -->
+<section id="scales" aria-labelledby="h-scales">
+  <h2 id="h-scales">How cold is cold enough?</h2>
+  <div class="prose">
+    <p>Numerically, \(T_c\) is very small in all realistic experiments, but not as small as you might guess. A <em>single</em> particle in a box is reasonably likely to be in the ground state only when \(k_{\mathrm{B}}T\) is of order \(\varepsilon_0\). With many bosons, most are in the ground state at temperatures only somewhat below \(T_c\), and \(k_{\mathrm{B}}T_c\) exceeds \(\varepsilon_0\) by a factor of order \(N^{2/3}\). The hierarchy is \((\varepsilon_0 - \mu) \ll \varepsilon_0 \ll k_{\mathrm{B}}T_c\).</p>
+  </div>
+  <div class="fig">
+    <div>
+      <div class="canvas-holder"><canvas id="ladCanvas" aria-label="Logarithmic energy axis showing the single-particle levels, the chemical potential, and the condensation temperature"></canvas></div>
+      <p class="cap">A logarithmic energy axis, measured from the bottom of the box, so the three scales fit on one line. Tick marks are the actual single-particle levels of the box; \(\mu\) is shown at \(T = T_c/2\).</p>
+    </div>
+    <div class="panel">
+      <div class="ctl">
+        <label for="atomSel"><span class="lt">Atom</span></label>
+        <select id="atomSel">
+          <option value="rb">Rubidium-87</option>
+          <option value="na">Sodium-23</option>
+          <option value="he">Helium-4</option>
+        </select>
+      </div>
+      <div class="ctl">
+        <label for="nDen"><span class="lt">Density \(N/V\)</span> <output id="nDenOut"></output></label>
+        <input type="range" id="nDen" min="17" max="29" step="0.01" value="19">
+      </div>
+      <div class="ctl">
+        <label for="nAt"><span class="lt">Number of atoms \(N\)</span> <output id="nAtOut"></output></label>
+        <input type="range" id="nAt" min="2" max="9" step="0.01" value="4">
+      </div>
+      <div class="big" id="tcBig">–</div>
+      <p class="cap" style="margin:0 0 .75rem">condensation temperature \(T_c\)</p>
+      <dl class="stats">
+        <dt>Box size \(L\)</dt><dd id="sL">–</dd>
+        <dt>\(\varepsilon_0/k_{\mathrm{B}}\)</dt><dd id="sE0">–</dd>
+        <dt>\(k_{\mathrm{B}}T_c/\varepsilon_0\)</dt><dd id="sRatio">–</dd>
+        <dt>\((\varepsilon_0-\mu)/\varepsilon_0\) at \(T_c/2\)</dt><dd id="sMu">–</dd>
+      </dl>
+    </div>
+  </div>
+  <p class="prose note" style="margin-top:1.25rem">In the experiments of Figure 7.35 (C. E. Wieman, 1996), rubidium-87 atoms held in a magnetic trap were imaged after the trap was switched off, so the pictures map their velocities. Above \(T_c\), at 200 nK, the cloud is broad and isotropic, as Maxwell–Boltzmann predicts; at 100 nK a dense, elongated condensate appears; near \(T = 0\) essentially all atoms are in it. Real traps are harmonic rather than boxes, so this calculator gives only an order-of-magnitude estimate for them. For liquid helium-4, the ideal-gas formula gives about 3.1 K, close to the 2.17 K at which helium actually becomes superfluid, even though the atoms in a liquid interact strongly.</p>
+</section>
+
+<!-- ============ WHY ============ -->
+<section id="why" aria-labelledby="h-why">
+  <h2 id="h-why">Why does it happen?</h2>
+  <div class="prose">
+    <p>Consider first \(N\) <em>distinguishable</em>, noninteracting particles in a box. Each, separately, has a decent chance of occupying any of the roughly \(Z_1\) single-particle states with energy up to about \(k_{\mathrm{B}}T\), so its chance of being in the ground state is only about \(1/Z_1\). Only a tiny fraction end up there: no condensation.</p>
+    <p>Look at the whole system at once, though, and there seems to be a paradox. The system state with every particle in the ground state has Boltzmann factor \(e^{0} = 1\), while a typical state with \(U \approx Nk_{\mathrm{B}}T\) has \(e^{-N} \ll 1\). The resolution is that a state is not an energy level. Any particular state with energy of order \(Nk_{\mathrm{B}}T\) is improbable, but there are so many of them that together they win, like the odds of an individual winning the lottery versus the odds that <em>someone</em> does. For distinguishable particles the number of arrangements is \(Z_1^N\), easily beating \(e^{-N}\).</p>
+    <p>For identical bosons, only the occupation numbers matter, and the count is much smaller:</p>
+    <div class="eq">\[ \binom{N + Z_1 - 1}{N} \sim \begin{cases} (eZ_1/N)^N & Z_1 \gg N \\ (eN/Z_1)^{Z_1} & Z_1 \ll N \end{cases} \]</div>
+    <p>When \(Z_1 \gg N\), excited states still dominate, as for distinguishable particles. When \(Z_1 \ll N\), the count can’t compensate for \(e^{-N}\): states with all bosons excited become exponentially improbable. The combinatorics gets about one boson into each available excited state, and the rest condense.</p>
+  </div>
+
+  <h3>A toy model you can count exactly</h3>
+  <p class="prose">One ground state at energy 0, and \(Z_1\) excited states, all at energy \(\varepsilon\). For distinguishable particles, \(P(k\ \text{excited}) \propto \binom{N}{k} Z_1^k e^{-k\varepsilon/k_{\mathrm{B}}T}\). For identical bosons, \(P(k) \propto \binom{k + Z_1 - 1}{k} e^{-k\varepsilon/k_{\mathrm{B}}T}\). The chart shows the resulting probability of each ground-state population, and the boxes show one system state drawn at random from each.</p>
+  <div class="fig">
+    <div>
+      <div class="canvas-holder"><canvas id="toyCanvas" aria-label="Probability distribution of the ground-state population for distinguishable particles and identical bosons"></canvas></div>
+      <div class="legend">
+        <span><span class="swatch" style="background:var(--dist)"></span>Distinguishable particles</span>
+        <span><span class="swatch" style="background:var(--cond)"></span>Identical bosons</span>
+      </div>
+      <div class="canvas-holder" style="margin-top:.75rem"><canvas id="boxCanvas" aria-label="One randomly drawn system state for each kind of particle"></canvas></div>
+      <div class="legend"><button type="button" id="resample">Draw new system states</button></div>
+    </div>
+    <div class="panel">
+      <div class="ctl btns"><button type="button" id="lectureToy">Lecture example: 100 bosons, 25 states</button></div>
+      <div class="ctl">
+        <label for="toyN"><span class="lt">Particles \(N\)</span> <output id="toyNOut"></output></label>
+        <input type="range" id="toyN" min="10" max="400" step="1" value="100">
+      </div>
+      <div class="ctl">
+        <label for="toyZ"><span class="lt">Excited states \(Z_1\)</span> <output id="toyZOut"></output></label>
+        <input type="range" id="toyZ" min="0" max="4" step="0.01" value="1.398">
+      </div>
+      <div class="ctl">
+        <label for="toyE"><span class="lt">\(\varepsilon/k_{\mathrm{B}}T\)</span> <output id="toyEOut"></output></label>
+        <input type="range" id="toyE" min="0.2" max="3" step="0.05" value="1">
+      </div>
+      <dl class="stats">
+        <dt>Average \(N_0/N\), distinguishable</dt><dd id="tD">–</dd>
+        <dt>Average \(N_0/N\), bosons</dt><dd id="tB">–</dd>
+        <dt class="sep"></dt>
+        <dt>\(e^{-N}\)</dt><dd id="tBoltz">–</dd>
+        <dt>Arrangements, distinguishable</dt><dd id="tCD">–</dd>
+        <dt>Arrangements, bosons</dt><dd id="tCB">–</dd>
+      </dl>
+      <p class="cap" style="margin:.75rem 0 0">The arrangement counts are for all \(N\) particles excited.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSING ============ -->
+<section id="quantum" aria-labelledby="h-quantum">
+  <h2 id="h-quantum">A truly quantum phenomenon</h2>
+  <div class="prose">
+    <p>The explanation of BEC lies in the combinatorics of counting arrangements of identical particles. How do we know bosons of a given species really are identical, and that every distinct state of the system deserves the same statistical weight? Good theoretical answers need more quantum mechanics, and even they aren’t completely airtight: some undiscovered interaction might yet tell the atoms apart and make a condensate spontaneously evaporate. So far, no such interaction seems to exist. Invoking Occam’s razor, Schroeder concludes, tentatively, that bosons of a given species are truly indistinguishable, quoting David Griffiths:</p>
+    <blockquote>“even God cannot tell them apart.”</blockquote>
+  </div>
+</section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>Created by Claude Opus 5.5, based on the lecture notes by Sang Hoon Lee on quantum statistics (Section 7.6, Bose–Einstein Condensation, with a look at Problem 7.66).</p>
+    <p>Constants: \(h = 6.626 \times 10^{-34}\ \mathrm{J\,s}\), \(k_{\mathrm{B}} = 1.381 \times 10^{-23}\ \mathrm{J/K}\), \(\zeta(3/2) = 2.612\), \(\int_0^\infty \sqrt{x}/(e^x-1)\,dx = 2.31516\). Equations typeset with MathJax.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+let C = {};
+function readColors(){
+  const cs = getComputedStyle(document.documentElement);
+  ['bg','surface','ink','muted','rule','band','cond','exc','dist','res','warn'].forEach(k => C[k] = cs.getPropertyValue('--'+k).trim());
+}
+readColors();
+const SANS = '"Instrument Sans", system-ui, sans-serif';
+const SERIF = '"Newsreader", Georgia, serif';
+function fit(cv, LW, LH){
+  const w = cv.parentElement.clientWidth || LW, hgt = w*LH/LW;
+  cv.style.height = hgt + 'px';
+  const d = window.devicePixelRatio || 1;
+  cv.width = Math.round(w*d); cv.height = Math.round(hgt*d);
+  const ctx = cv.getContext('2d'); const s = w*d/LW;
+  ctx.setTransform(s,0,0,s,0,0);
+  return ctx;
+}
+function rich(c, x, y, size, parts, align){
+  c.save(); c.textAlign = 'left';
+  const fontOf = st => st==='i' ? 'italic '+size+'px '+SERIF : st==='isub' ? 'italic '+(size*0.7)+'px '+SERIF : (st==='sub'||st==='sup') ? (size*0.7)+'px '+SERIF : st==='s' ? (size*0.88)+'px '+SANS : st==='sb' ? '600 '+(size*0.88)+'px '+SANS : size+'px '+SERIF;
+  const widths = parts.map(([t,st]) => { c.font = fontOf(st); return c.measureText(t).width; });
+  const total = widths.reduce((a,b)=>a+b,0);
+  let cx = align==='center' ? x-total/2 : align==='right' ? x-total : x;
+  parts.forEach(([t,st],i) => { c.font = fontOf(st); const dy = (st==='sub'||st==='isub') ? size*0.25 : st==='sup' ? -size*0.38 : 0; c.fillText(t, cx, y+dy); cx += widths[i]; });
+  c.restore(); return total;
+}
+const SUP = n => String(n).replace('-','⁻').replace(/\d/g, d => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]);
+function sci(x, sig){
+  sig = sig || 2;
+  if (!isFinite(x)) return '–';
+  if (x === 0) return '0';
+  const e = Math.floor(Math.log10(Math.abs(x)));
+  if (e >= -2 && e < 5) return Number(x.toPrecision(sig)).toLocaleString('en-US',{maximumSignificantDigits:sig});
+  let m = (Math.abs(x)/Math.pow(10,e)).toFixed(sig-1), ee = e;
+  if (parseFloat(m) >= 10){ m = (parseFloat(m)/10).toFixed(sig-1); ee++; }
+  return (x<0?'−':'') + m + ' × 10<sup>' + (ee<0?'−'+(-ee):ee) + '</sup>';
+}
+// a number given by its base-10 logarithm, for counts far beyond double range
+function sciLog(l10, sig){ const e = Math.floor(l10), m = Math.pow(10, l10 - e); return (e >= -2 && e < 5) ? Number(Math.pow(10,l10).toPrecision(sig||2)).toLocaleString('en-US') : m.toFixed((sig||2)-1) + ' × 10<sup>' + (e<0?'−'+(-e):e) + '</sup>'; }
+function signed(x,d){ return (x<0?'−':'') + Math.abs(x).toFixed(d); }
+const h = 6.62607015e-34, kB = 1.380649e-23, amu = 1.66053907e-27;
+const I32 = 2.315157373394117; // Gamma(3/2) zeta(3/2)
+
+/* ---------- infinite-N thermodynamics (units of k_B T_c) ---------- */
+function simpson(f, a, b, n){ if (b<=a) return 0; const hh=(b-a)/n; let s=f(a)+f(b); for (let i=1;i<n;i++) s += (i%2?4:2)*f(a+i*hh); return s*hh/3; }
+// F(eta) = int_0^inf sqrt(x)/(e^(x-eta) - 1) dx for eta < 0, via x = s^2
+function F(eta){ return simpson(s => { const d = Math.expm1(s*s - eta); return d > 0 ? 2*s*s/d : 0; }, 0, Math.sqrt(40 + Math.max(0,-eta)*0), 400); }
+const muCache = new Map();
+function muOf(t){ // mu / k_B T_c
+  if (t <= 1) return 0;
+  const key = t.toFixed(3); if (muCache.has(key)) return muCache.get(key);
+  let lo = -30, hi = -1e-9;  // eta = mu/kT
+  for (let k=0;k<55;k++){ const mid=(lo+hi)/2; (Math.pow(t,1.5)*F(mid)/I32 > 1) ? hi=mid : lo=mid; }
+  const v = t*(lo+hi)/2; muCache.set(key, v); return v;
+}
+const n0Of = t => t >= 1 ? 0 : 1 - Math.pow(t, 1.5);
+
+/* ================= THREE-PANEL ================= */
+let tT = 0.6;
+function triRender(){
+  const t = tT, mu = muOf(t), n0 = n0Of(t), nex = 1 - n0;
+  $('tOut').textContent = t.toFixed(2);
+  $('n0Big').textContent = (n0*100).toFixed(n0 > 0.995 ? 1 : 0) + '%';
+  $('nEx').textContent = nex.toFixed(3);
+  $('muV').textContent = t <= 1 ? '≈ 0' : signed(mu, 3);
+  const c = triCtx; if (!c) return;
+  const W=700,H=280; c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
+  const pw = 196, gap = 40, x0s = [18, 18+pw+gap, 18+2*(pw+gap)], T0 = 44, B = 48, xmax = 3;
+  const titles = ['Density of states', 'Bose–Einstein distribution', 'Particle distribution'];
+  const fn = [
+    x => Math.sqrt(x),
+    x => { const d = Math.expm1((x - mu)/t); return d > 0 ? 1/d : Infinity; },
+    x => { const d = Math.expm1((x - mu)/t); return d > 0 ? Math.sqrt(x)/d/I32 : 0; }
+  ];
+  const ymaxs = [1.9, 3, 1.15];
+  c.font='12px '+SANS; c.textAlign='center';
+  x0s.forEach((x0,p) => {
+    // no clamping: values beyond the panel simply run off its top edge (the panel is clipped)
+    const X = x => x0 + x/xmax*pw, Y = v => H-B - Math.min(v, ymaxs[p]*50)/ymaxs[p]*(H-T0-B);
+    c.fillStyle=C.ink; c.font='600 13px '+SANS; c.textAlign='left'; c.fillText(titles[p], x0+4, 22);
+    c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(x0, T0-10); c.lineTo(x0, H-B); c.lineTo(x0+pw, H-B); c.stroke();
+    c.fillStyle=C.muted; c.font='12px '+SANS; c.textAlign='center';
+    [1,2,3].forEach(v => { c.fillText(v, X(v), H-B+16); c.beginPath(); c.moveTo(X(v),H-B); c.lineTo(X(v),H-B+4); c.stroke(); });
+    rich(c, x0+pw, H-B+34, 14, [['ε','i'],[' / ','r'],['k','i'],['B','sub'],['T','i'],['c','isub']], 'right');
+    // sample densely near ε = 0, where the BE distribution and the product blow up
+    const xs = [0]; for (let k=1;k<=600;k++) xs.push(xmax*Math.pow(k/600, p===0 ? 1 : 2.2));
+    const val = x => { const v = fn[p](x); return isFinite(v) ? v : ymaxs[p]*50; };
+    c.save(); c.beginPath(); c.rect(x0, T0-10, pw+1, H-B-(T0-10)); c.clip();
+    if (p === 2){
+      c.fillStyle=C.exc; c.globalAlpha=0.25; c.beginPath(); c.moveTo(X(0),Y(0));
+      xs.forEach(x => c.lineTo(X(x), Y(val(x)))); c.lineTo(X(xmax),Y(0)); c.closePath(); c.fill(); c.globalAlpha=1;
+    }
+    c.strokeStyle = p===2 ? C.exc : C.ink; c.lineWidth=2.4; c.beginPath();
+    xs.forEach((x,k) => { const py = Y(val(x)); k ? c.lineTo(X(x),py) : c.moveTo(X(x),py); });
+    c.stroke();
+    c.restore();
+    // say what happens off the top of the panel
+    if (p > 0 && val(xs[1]) > ymaxs[p]){
+      c.fillStyle = p===2 ? C.exc : C.muted; c.font='12px '+SANS; c.textAlign='left';
+      const msg = p===1 ? (t <= 1 ? '↑ diverges as ε → μ ≈ 0' : '↑ continues off the scale') : (t <= 1 ? '↑ ∝ 1/√ε, but the area is finite' : '');
+      if (msg) c.fillText(msg, x0 + 16, T0 - 2);
+    }
+  });
+  // the multiplication and equals signs
+  c.fillStyle=C.muted; c.font='28px '+SERIF; c.textAlign='center';
+  c.fillText('×', x0s[1]-gap/2, H/2+8); c.fillText('=', x0s[2]-gap/2, H/2+8);
+  // mu marker on the BE panel
+  { const x0=x0s[1]; c.fillStyle=C.warn; rich(c, x0, H-B+34, 14, t <= 1 ? [['μ','i'],[' ≈ 0','s']] : [['μ','i'],[' = ' + signed(mu,2) + ' ','s'],['k','i'],['B','sub'],['T','i'],['c','isub']], 'left'); }
+  // condensate bar on the product panel
+  { const x0=x0s[2], top = T0, bh = n0*(H-T0-B); c.fillStyle=C.cond; c.fillRect(x0+2, H-B-bh, 9, bh);
+    if (n0 > 0.005){ c.font='600 12px '+SANS; c.textAlign='left'; c.fillStyle=C.cond; c.fillText('N₀/N = ' + n0.toFixed(2), x0+16, Math.max(top+12, H-B-bh+12)); } }
+  c.fillStyle=C.exc; c.font='12px '+SANS; c.textAlign='right'; c.fillText('area = ' + nex.toFixed(2), x0s[2]+pw-4, T0+40);
+}
+$('tS').addEventListener('input', e => { tT = +e.target.value; triRender(); curvesRender(); });
+
+/* ================= N0 and MU CURVES ================= */
+function axes(c, W, H, box, xr, yr, xt, yt, ylab){
+  const [L,T,R,B] = box;
+  c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
+  const X = v => L + (v-xr[0])/(xr[1]-xr[0])*(W-L-R), Y = v => H-B - (v-yr[0])/(yr[1]-yr[0])*(H-T-B);
+  c.font='12px '+SANS; c.fillStyle=C.muted; c.textAlign='center';
+  xt.forEach(v => { c.strokeStyle=C.band; c.lineWidth=1; c.beginPath(); c.moveTo(X(v),T); c.lineTo(X(v),H-B); c.stroke(); c.fillText(v, X(v), H-B+16); });
+  c.textAlign='right'; yt.forEach(v => { c.strokeStyle = v===0 ? C.rule : C.band; c.beginPath(); c.moveTo(L,Y(v)); c.lineTo(W-R,Y(v)); c.stroke(); c.fillText(Number.isInteger(v) ? signed(v,0) : (v<0?'−':'') + String(Math.abs(v)), L-6, Y(v)+4); });
+  c.fillStyle=C.muted; rich(c, W-R-2, H-8, 14, [['T','i'],[' / ','r'],['T','i'],['c','isub']], 'right');
+  rich(c, L+6, T+12, 14, ylab, 'left');
+  c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(L,T); c.lineTo(L,H-B); c.lineTo(W-R,H-B); c.stroke();
+  return {X, Y};
+}
+function curvesRender(){
+  const W=440,H=300, box=[46,16,14,44];
+  if (nCtx){
+    const c = nCtx; const ax = axes(c, W, H, box, [0,2], [0,1.08], [0,0.5,1,1.5,2], [0,0.5,1], [['N','i'],[' / ','r'],['N','i']]);
+    c.strokeStyle=C.rule; c.setLineDash([3,4]); c.beginPath(); c.moveTo(ax.X(1),16); c.lineTo(ax.X(1),H-44); c.stroke(); c.setLineDash([]);
+    [[n0Of, C.cond],[t => 1-n0Of(t), C.exc]].forEach(([f,col]) => { c.strokeStyle=col; c.lineWidth=2.6; c.beginPath(); for (let i=0;i<=300;i++){ const t=2*i/300; const y=ax.Y(f(t)); i?c.lineTo(ax.X(t),y):c.moveTo(ax.X(t),y); } c.stroke(); c.fillStyle=col; c.beginPath(); c.arc(ax.X(tT), ax.Y(f(tT)), 5, 0, 7); c.fill(); });
+    c.fillStyle=C.muted; rich(c, ax.X(1)+6, ax.Y(0.1), 14, [['kink at ','s'],['T','i'],[' = ','r'],['T','i'],['c','isub']], 'left');
+  }
+  if (muCtx){
+    const c = muCtx; const ax = axes(c, W, H, box, [0,2], [-0.9,0.1], [0,0.5,1,1.5,2], [0,-0.4,-0.8], [['μ','i'],[' / ','r'],['k','i'],['B','sub'],['T','i'],['c','isub']]);
+    c.strokeStyle=C.warn; c.lineWidth=2.6; c.beginPath(); for (let i=0;i<=200;i++){ const t=2*i/200; const y=ax.Y(Math.max(-0.95, muOf(Math.max(t,1e-3)))); i?c.lineTo(ax.X(t),y):c.moveTo(ax.X(t),y); } c.stroke();
+    c.fillStyle=C.warn; c.beginPath(); c.arc(ax.X(tT), ax.Y(muOf(tT)), 5, 0, 7); c.fill();
+  }
+}
+
+/* ================= FINITE N (exact sum over box states) ================= */
+const FIN = {N:1000, cache:{}, busy:false};
+const FIN_T = []; for (let t=0.3; t<=1.5001; t+=0.025) FIN_T.push(+t.toFixed(3));
+const KTC1 = 0.527*8/(2*Math.PI); // k_B T_c / (h^2/8mL^2) per N^(2/3)
+function finiteCompute(N){
+  const c = KTC1*Math.pow(N, 2/3), tmax = FIN_T[FIN_T.length-1];
+  const n2max = Math.floor(32*tmax*c) + 12, nm = Math.floor(Math.sqrt(n2max)) + 1;
+  const acc = new Uint32Array(n2max + 1);
+  for (let x=1;x<=nm;x++){ const x2=x*x; if (x2>n2max) break; for (let y=1;y<=nm;y++){ const xy=x2+y*y; if (xy>n2max) break; for (let z=1;z<=nm;z++){ const s=xy+z*z; if (s>n2max) break; acc[s]++; } } }
+  const lev = [], deg = []; for (let s=3;s<=n2max;s++) if (acc[s]){ lev.push(s); deg.push(acc[s]); }
+  const L = Float64Array.from(lev), D = Float64Array.from(deg), m = L.length;
+  return FIN_T.map(t => {
+    const kT = t*c; let lo = -50*kT, hi = 3 - 1e-12;
+    for (let k=0;k<64;k++){ const mu=(lo+hi)/2; let tot=0; for (let i=0;i<m;i++){ const x=(L[i]-mu)/kT; if (x>40) break; tot += D[i]/Math.expm1(x); } (tot < N) ? lo=mu : hi=mu; }
+    return 1/Math.expm1((3 - (lo+hi)/2)/kT)/N;
+  });
+}
+const FIN_NS = [100, 1000, 10000, 100000];
+$('finBtns').innerHTML = FIN_NS.map(n => '<button type="button" data-fn="'+n+'">'+n.toLocaleString('en-US')+' atoms</button>').join('');
+document.querySelectorAll('[data-fn]').forEach(b => b.addEventListener('click', () => selectFin(+b.dataset.fn)));
+function selectFin(N){
+  FIN.N = N;
+  document.querySelectorAll('[data-fn]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.fn===N)));
+  if (!FIN.cache[N]){
+    $('finStatus').textContent = 'Summing over the box states…';
+    document.querySelectorAll('[data-fn]').forEach(b => b.disabled = true);
+    setTimeout(() => { FIN.cache[N] = finiteCompute(N); document.querySelectorAll('[data-fn]').forEach(b => b.disabled = false); $('finStatus').textContent = ''; finRender(); }, 30);
+  }
+  finRender();
+}
+function finRender(){
+  const c = finCtx; if (!c) return;
+  const W=640,H=360, ax = axes(c, W, H, [50,16,16,44], [0.3,1.5], [0,1.05], [0.4,0.6,0.8,1,1.2,1.4], [0,0.25,0.5,0.75,1], [['N','i'],['0','sub'],[' / ','r'],['N','i']]);
+  c.strokeStyle=C.ink; c.lineWidth=2; c.setLineDash([6,5]); c.beginPath();
+  for (let i=0;i<=200;i++){ const t=0.3+1.2*i/200; const y=ax.Y(n0Of(t)); i?c.lineTo(ax.X(t),y):c.moveTo(ax.X(t),y); } c.stroke(); c.setLineDash([]);
+  // all computed N in faint, selected bold
+  FIN_NS.forEach(N => { const arr = FIN.cache[N]; if (!arr) return; const sel = N===FIN.N;
+    c.strokeStyle = sel ? C.cond : C.res; c.lineWidth = sel ? 3 : 1.4; c.globalAlpha = sel ? 1 : 0.7; c.beginPath();
+    arr.forEach((v,i) => { const x=ax.X(FIN_T[i]), y=ax.Y(v); i?c.lineTo(x,y):c.moveTo(x,y); }); c.stroke(); c.globalAlpha=1;
+    const iE = arr.length-1; c.fillStyle = sel ? C.cond : C.muted; c.font=(sel?'600 ':'')+'11px '+SANS; c.textAlign='left';
+    const k = FIN_T.indexOf(1); if (k >= 0 && arr[k] > 0.02) c.fillText('N = ' + N.toLocaleString('en-US'), ax.X(1)+6, ax.Y(arr[k])-4);
+  });
+  const arr = FIN.cache[FIN.N];
+  $('finTc').textContent = arr ? arr[FIN_T.indexOf(1)].toFixed(3) : '–';
+  $('fin08').textContent = arr ? arr[FIN_T.indexOf(0.8)].toFixed(3) : '–';
+}
+
+/* ================= ENERGY SCALES ================= */
+const ATOMS = {rb:{m:86.909*amu, n:19}, na:{m:22.990*amu, n:20}, he:{m:4.0026*amu, n:Math.log10(145/(4.0026*amu))}};
+const SC = {atom:'rb', ln:19, lN:4};
+function tStr(T){ const a=Math.abs(T); return a >= 1 ? T.toPrecision(3) + ' K' : a >= 1e-3 ? (T*1e3).toPrecision(3) + ' mK' : a >= 1e-6 ? (T*1e6).toPrecision(3) + ' μK' : a >= 1e-9 ? (T*1e9).toPrecision(3) + ' nK' : sci(T,2) + ' K'; }
+function lenStr(m){ const U=[[1e-9,'nm'],[1e-6,'μm'],[1e-3,'mm'],[1,'m']]; let u=U[0]; for (const v of U) if (m >= v[0]) u=v; const v=m/u[0]; return (v>=100?Math.round(v):v>=10?v.toFixed(1):v.toFixed(2)) + ' ' + u[1]; }
+function scalesRender(){
+  const a = ATOMS[SC.atom], n = Math.pow(10, SC.ln), N = Math.pow(10, SC.lN);
+  $('nDenOut').innerHTML = sci(n,2) + ' m<sup>−3</sup>';
+  $('nAtOut').innerHTML = N < 1e5 ? Math.round(N).toLocaleString('en-US') : sci(N,2);
+  const Tc = 0.527*h*h/(2*Math.PI*a.m*kB)*Math.pow(n, 2/3);
+  const L = Math.pow(N/n, 1/3), e1 = h*h/(8*a.m*L*L), e0 = 3*e1;
+  const ratio = kB*Tc/e0;
+  const Th = Tc/2, N0 = N*(1 - Math.pow(0.5,1.5)), gapMu = kB*Th/N0; // epsilon0 - mu
+  $('tcBig').textContent = tStr(Tc);
+  $('sL').textContent = lenStr(L);
+  $('sE0').innerHTML = tStr(e0/kB);
+  $('sRatio').innerHTML = sci(ratio,2);
+  $('sMu').innerHTML = sci(gapMu/e0,2);
+  const c = ladCtx; if (!c) return;
+  const W=640,H=240; c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
+  // log axis from (eps0-mu) / 10 up to 3 k Tc, energies in units of eps1
+  const lo = Math.log10(gapMu/e1/3), hi = Math.log10(3*kB*Tc/e1);
+  const L0 = 30, R0 = 20, y = 130;
+  const X = v => L0 + (Math.log10(v)-lo)/(hi-lo)*(W-L0-R0);
+  c.strokeStyle=C.ink; c.lineWidth=1.5; c.beginPath(); c.moveTo(L0, y); c.lineTo(W-R0, y); c.stroke();
+  // single-particle levels: energies measured from the bottom of the box, s*eps1 for each allowed n^2 sum s
+  const smax = Math.min(3*kB*Tc/e1, 4000);
+  const seen = new Uint8Array(Math.floor(smax)+2);
+  const nm = Math.floor(Math.sqrt(smax))+1;
+  for (let x=1;x<=nm;x++) for (let yy=1;yy<=nm;yy++) for (let z=1;z<=nm;z++){ const s=x*x+yy*yy+z*z; if (s<=smax) seen[s]=1; }
+  c.strokeStyle=C.muted; c.lineWidth=1;
+  let lastX = -10;
+  for (let s=3;s<seen.length;s++) if (seen[s]){ const px = X(s); if (px - lastX < 1.2) continue; lastX = px; c.beginPath(); c.moveTo(px, y-12); c.lineTo(px, y); c.stroke(); }
+  if (smax >= 4000){ c.fillStyle=C.muted; c.font='11px '+SANS; c.textAlign='right'; c.fillText('levels beyond this are too dense to draw', W-R0, y-18); }
+  const mark = (v, col, labelParts, up) => {
+    const px = X(v); c.strokeStyle=col; c.lineWidth=2.4; c.beginPath(); c.moveTo(px, up ? y-40 : y); c.lineTo(px, up ? y : y+40); c.stroke();
+    c.fillStyle=col; c.beginPath(); if (up){ c.moveTo(px, y-2); c.lineTo(px-5, y-12); c.lineTo(px+5, y-12); } else { c.moveTo(px, y+2); c.lineTo(px-5, y+12); c.lineTo(px+5, y+12); } c.closePath(); c.fill();
+    rich(c, px, up ? y-48 : y+60, 15, labelParts, 'center');
+  };
+  mark(3, C.cond, [['ε','i'],['0','sub']], true);
+  mark(6, C.muted, [['first excited, 2','s'],['ε','i'],['0','sub']], false);
+  mark(kB*Tc/e1, C.exc, [['k','i'],['B','sub'],['T','i'],['c','isub']], true);
+  // epsilon0 - mu shown as a small bracket at the far left
+  const gx = X(gapMu/e1);
+  c.strokeStyle=C.warn; c.lineWidth=2.4; c.beginPath(); c.moveTo(gx, y-40); c.lineTo(gx, y); c.stroke();
+  c.fillStyle=C.warn; rich(c, Math.max(gx, L0+50), y-48, 15, [['ε','i'],['0','sub'],[' − ','r'],['μ','i']], 'center');
+  c.fillStyle=C.muted; c.font='12px '+SANS; c.textAlign='left'; c.fillText('energy, log scale →', L0, H-12);
+}
+$('atomSel').addEventListener('change', e => { SC.atom = e.target.value; SC.ln = ATOMS[SC.atom].n; $('nDen').value = SC.ln.toFixed(2); scalesRender(); });
+$('nDen').addEventListener('input', e => { SC.ln = +e.target.value; scalesRender(); });
+$('nAt').addEventListener('input', e => { SC.lN = +e.target.value; scalesRender(); });
+
+/* ================= TOY MODEL ================= */
+const LF = new Float64Array(12001); for (let k=1;k<=12000;k++) LF[k] = LF[k-1] + Math.log(k);
+const lC = (a,b) => (b<0||b>a) ? -Infinity : LF[a]-LF[b]-LF[a-b];
+const TOY = {N:100, Z:25, e:1, sample:null};
+function toyDist(){
+  const {N, Z, e} = TOY, d = [], b = [];
+  for (let k=0;k<=N;k++){ d.push(lC(N,k) + k*(Math.log(Z) - e)); b.push(lC(k+Z-1,k) - k*e); }
+  const norm = arr => { const m = Math.max(...arr); const p = arr.map(v => Math.exp(v-m)); const s = p.reduce((a,c)=>a+c,0); return p.map(v => v/s); };
+  return {d: norm(d), b: norm(b)};   // index k = number excited
+}
+function drawSample(dist){
+  const pick = p => { let r=Math.random(), k=0; for (; k<p.length-1; k++){ r -= p[k]; if (r <= 0) break; } return k; };
+  const {N, Z} = TOY, shown = Math.min(Z, 9);
+  // distinguishable: k excited, each in a uniformly random excited state
+  const kd = pick(dist.d), dBoxes = Array.from({length: shown}, () => []);
+  const ids = Array.from({length:N}, (_,i) => i); for (let i=N-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [ids[i],ids[j]]=[ids[j],ids[i]]; }
+  for (let i=0;i<kd;i++){ const s = Math.floor(Math.random()*Z); if (s < shown) dBoxes[s].push(ids[i]); }
+  // bosons: k excited, a uniformly random multiset (stars and bars)
+  const kb = pick(dist.b), bBoxes = new Array(shown).fill(0);
+  if (kb > 0){ const bars = new Set(); const tot = kb + Z - 1; while (bars.size < Z-1){ bars.add(Math.floor(Math.random()*tot)); } const sorted = [...bars].sort((a,b)=>a-b); let prev = -1; sorted.concat([tot]).forEach((bar, i) => { if (i < shown) bBoxes[i] = bar - prev - 1; prev = bar; }); if (Z === 1) bBoxes[0] = kb; }
+  TOY.sample = {kd, kb, dBoxes, bBoxes, shown, dGround: ids.slice(kd)};
+}
+function toyRender(resample){
+  $('toyNOut').textContent = TOY.N;
+  $('toyZOut').textContent = Math.round(TOY.Z).toLocaleString('en-US');
+  $('toyEOut').textContent = TOY.e.toFixed(2);
+  const dist = toyDist(), {N, Z, e} = TOY;
+  let md=0, mb=0; for (let k=0;k<=N;k++){ md += (N-k)*dist.d[k]; mb += (N-k)*dist.b[k]; }
+  $('tD').textContent = (md/N).toFixed(3); $('tB').textContent = (mb/N).toFixed(3);
+  $('tBoltz').innerHTML = sciLog(-N*e/Math.LN10, 2);
+  $('tCD').innerHTML = sciLog(N*Math.log10(Z), 2);
+  $('tCB').innerHTML = sciLog(lC(N+Z-1, N)/Math.LN10, 2);
+  if (resample || !TOY.sample) drawSample(dist);
+  // chart: P(N0/N)
+  const c = toyCtx; if (c){
+    const W=640,H=300,L=50,R=16,T=16,B=44;
+    c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
+    const pm = Math.max(...dist.d, ...dist.b)*1.12;
+    const X = f => L + f*(W-L-R), Y = p => H-B - p/pm*(H-T-B);
+    c.font='12px '+SANS; c.fillStyle=C.muted; c.textAlign='center';
+    [0,0.25,0.5,0.75,1].forEach(v => { c.strokeStyle=C.band; c.lineWidth=1; c.beginPath(); c.moveTo(X(v),T); c.lineTo(X(v),H-B); c.stroke(); c.fillText(v, X(v), H-B+16); });
+    c.fillStyle=C.muted; rich(c, W-R-2, H-8, 14, [['ground-state fraction ','s'],['N','i'],['0','sub'],[' / ','r'],['N','i']], 'right');
+    rich(c, L+6, T+12, 14, [['probability','s']], 'left');
+    const bw = Math.max(1.5, (W-L-R)/(N+1));
+    [[dist.d, C.dist],[dist.b, C.cond]].forEach(([p,col]) => { c.fillStyle=col; c.globalAlpha=0.8; p.forEach((v,k) => { if (v < pm*1e-4) return; const f=(N-k)/N; const y=Y(v); c.fillRect(X(f)-bw/2, y, bw, H-B-y); }); c.globalAlpha=1; });
+    c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(L,T); c.lineTo(L,H-B); c.lineTo(W-R,H-B); c.stroke();
+  }
+  // boxes
+  const b = boxCtx; if (b && TOY.sample){
+    const W=640,H=316; b.clearRect(0,0,W,H); b.fillStyle=C.surface; b.fillRect(0,0,W,H);
+    const S = TOY.sample, bw=56, bh=44, gapx=8;
+    const shapes = (ctx, x, y, id) => { const col = [C.dist, C.exc, C.warn, C.cond, C.muted][id%5], kind = Math.floor(id/5)%4; ctx.fillStyle=col; ctx.strokeStyle=col; ctx.lineWidth=1.4; ctx.beginPath();
+      if (kind===0) ctx.arc(x,y,3.4,0,7); else if (kind===1) ctx.rect(x-3.2,y-3.2,6.4,6.4); else if (kind===2){ ctx.moveTo(x,y-4); ctx.lineTo(x+4,y+3.5); ctx.lineTo(x-4,y+3.5); ctx.closePath(); } else { ctx.moveTo(x,y-4.2); ctx.lineTo(x+4,y); ctx.lineTo(x,y+4.2); ctx.lineTo(x-4,y); ctx.closePath(); }
+      (id%2) ? ctx.fill() : ctx.stroke(); };
+    const fillBox = (x, y, count, ids, boson, wide) => {
+      const w = wide ? bw*2+gapx : bw;
+      b.strokeStyle=C.ink; b.lineWidth=1.3; b.strokeRect(x, y, w, bh);
+      const cap = wide ? 21 : 12, nshow = Math.min(count, cap), cols = wide ? 7 : 4;
+      for (let i=0;i<nshow;i++){ const cx = x + 9 + (i%cols)*((w-18)/(cols-1||1)), cy = y + 10 + Math.floor(i/cols)*9;
+        if (boson){ b.fillStyle=C.cond; b.beginPath(); b.arc(cx, cy, 3.4, 0, 7); b.fill(); } else shapes(b, cx, cy, ids[i]); }
+      if (count > cap){ b.fillStyle=C.muted; b.font='11px '+SANS; b.textAlign='right'; b.fillText('+' + (count-cap), x+w-4, y+bh-4); }
+      b.fillStyle=C.muted; b.font='11px '+SANS; b.textAlign='left'; b.fillText(String(count), x+3, y+bh+12);
+    };
+    const drawSide = (x0, title, boson) => {
+      b.fillStyle=C.ink; b.font='600 13px '+SANS; b.textAlign='left'; b.fillText(title, x0, 20);
+      for (let i=0;i<S.shown;i++){ const col=i%3, row=Math.floor(i/3); const x = x0 + col*(bw+gapx), y = 32 + row*(bh+16);
+        if (boson) fillBox(x, y, S.bBoxes[i], null, true, false); else fillBox(x, y, S.dBoxes[i].length, S.dBoxes[i], false, false); }
+      const gy = 32 + Math.ceil(S.shown/3)*(bh+16) + 6;
+      const n0 = boson ? N - S.kb : N - S.kd;
+      fillBox(x0 + (bw+gapx)/2, gy, n0, boson ? null : S.dGround, boson, true);
+      b.fillStyle=C.muted; b.font='11px '+SANS; b.textAlign='left'; b.fillText('ground state', x0 + (bw+gapx)/2 + 2*bw + gapx + 6, gy + bh/2 + 4);
+    };
+    drawSide(20, 'Distinguishable particles', false);
+    drawSide(340, 'Identical bosons', true);
+    b.fillStyle=C.muted; b.font='11px '+SANS; b.textAlign='left';
+    b.fillText(S.shown < Z ? 'Showing ' + S.shown + ' of the ' + Math.round(Z).toLocaleString('en-US') + ' excited states, above the ground state. Numbers count particles per box.' : 'All ' + Z + ' excited states, above the ground state. Numbers count particles per box.', 20, H-8);
+  }
+}
+$('toyN').addEventListener('input', e => { TOY.N = +e.target.value; toyRender(true); });
+$('toyZ').addEventListener('input', e => { TOY.Z = Math.max(1, Math.round(Math.pow(10, +e.target.value))); toyRender(true); });
+$('toyE').addEventListener('input', e => { TOY.e = +e.target.value; toyRender(true); });
+$('resample').addEventListener('click', () => toyRender(true));
+$('lectureToy').addEventListener('click', () => { TOY.N=100; TOY.Z=25; TOY.e=1; $('toyN').value=100; $('toyZ').value=Math.log10(25).toFixed(3); $('toyE').value=1; toyRender(true); });
+
+/* ================= LAYOUT ================= */
+let triCtx, nCtx, muCtx, finCtx, ladCtx, toyCtx, boxCtx;
+function layout(){
+  triCtx = fit($('triCanvas'), 700, 280);
+  nCtx = fit($('nCanvas'), 440, 300);
+  muCtx = fit($('muCanvas'), 440, 300);
+  finCtx = fit($('finCanvas'), 640, 360);
+  ladCtx = fit($('ladCanvas'), 640, 240);
+  toyCtx = fit($('toyCanvas'), 640, 300);
+  boxCtx = fit($('boxCanvas'), 640, 316);
+  redrawAll();
+}
+function redrawAll(){ triRender(); curvesRender(); finRender(); scalesRender(); toyRender(false); }
+let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(layout, 80); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { readColors(); redrawAll(); });
+layout();
+selectFin(1000);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(redrawAll);
+})();
+</script>
+</body>
+</html>
