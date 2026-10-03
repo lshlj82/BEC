@@ -50,6 +50,12 @@ p{margin:0 0 1rem}
 blockquote{margin:1.25rem 0;padding-left:1rem;border-left:3px solid var(--cond);font-style:italic}
 
 .eq{display:block;text-align:center;margin:1.25rem 0;overflow-x:auto;overflow-y:hidden;padding:.25rem 0}
+.eq.multi{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;column-gap:2.2em;row-gap:.65rem}
+.boxed.multi{display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:center;column-gap:2em;row-gap:.6rem;max-width:100%}
+.eqp{max-width:100%}
+.eqp.sep{margin-left:1.85em}
+.multi:not(.chain) > .eqp.cont{margin-left:-1.85em}
+.multi.chain{column-gap:.35em}
 mjx-container{color:inherit}
 mjx-container[display="true"]{margin:0 !important}
 .stats mjx-container,.legend mjx-container,.cap mjx-container,.ctl small mjx-container{font-size:105%}
@@ -118,7 +124,7 @@ window.MathJax = {
     <p>Photons and phonons can be created freely, so their \(\mu = 0\). Now consider more ordinary bosons, such as atoms with integer spin, whose number is fixed from the outset. Then \(\mu\) is a nontrivial function of density and temperature. At \(T = 0\), trivially, every atom is in the ground state. In a box of volume \(V = L^3\) that state has energy</p>
     <div class="eq">\[ \varepsilon_0 = \frac{h^2}{8mL^2}\left(1^2 + 1^2 + 1^2\right) = \frac{3h^2}{8mL^2} \]</div>
     <p>and at any temperature the average number of atoms in it is</p>
-    <div class="eq">\[ N_0 = \frac{1}{e^{(\varepsilon_0-\mu)/k_{\mathrm{B}}T} - 1} \approx \frac{k_{\mathrm{B}}T}{\varepsilon_0 - \mu} \quad\text{when } N_0 \gg 1 \]</div>
+    <div class="eq multi chain"><span class="eqp">\( \displaystyle N_0 = \frac{1}{e^{(\varepsilon_0-\mu)/k_{\mathrm{B}}T} - 1} \)</span><span class="eqp">\( \displaystyle \approx \frac{k_{\mathrm{B}}T}{\varepsilon_0 - \mu} \quad\text{when } N_0 \gg 1 \)</span></div>
     <p>For \(N_0\) to be large, \(\mu\) must sit a tiny bit below \(\varepsilon_0\); at \(T = 0\), \(\mu = \varepsilon_0\). The question is how low the temperature must be for that to happen.</p>
   </div>
 </section>
@@ -128,13 +134,13 @@ window.MathJax = {
   <h2 id="h-mu">Finding the chemical potential</h2>
   <div class="prose">
     <p>The condition that fixes \(\mu\) is that the occupancies of all states add up to \(N\). Converting the sum to an integral with the density of states (half that of the electrons in Section 7.3, since these bosons have spin zero),</p>
-    <div class="eq">\[ N = \int_0^\infty g(\varepsilon)\,\frac{1}{e^{(\varepsilon-\mu)/k_{\mathrm{B}}T} - 1}\,d\varepsilon, \qquad g(\varepsilon) = \frac{2}{\sqrt{\pi}}\left(\frac{2\pi m}{h^2}\right)^{3/2} V\sqrt{\varepsilon} \]</div>
+    <div class="eq multi"><span class="eqp">\( \displaystyle N = \int_0^\infty g(\varepsilon)\,\frac{1}{e^{(\varepsilon-\mu)/k_{\mathrm{B}}T} - 1}\,d\varepsilon, \)</span><span class="eqp">\( \displaystyle g(\varepsilon) = \frac{2}{\sqrt{\pi}}\left(\frac{2\pi m}{h^2}\right)^{3/2} V\sqrt{\varepsilon} \)</span></div>
     <p>This can’t be done analytically, so try \(\mu = 0\), which should work at very low temperature:</p>
-    <div class="eq">\[ N = \frac{2}{\sqrt{\pi}}\left(\frac{2\pi m k_{\mathrm{B}}T}{h^2}\right)^{3/2} V\int_0^\infty\frac{\sqrt{x}\,dx}{e^x - 1} = 2.612\left(\frac{2\pi m k_{\mathrm{B}}T}{h^2}\right)^{3/2} V \]</div>
+    <div class="eq multi chain"><span class="eqp">\( \displaystyle N = \frac{2}{\sqrt{\pi}}\left(\frac{2\pi m k_{\mathrm{B}}T}{h^2}\right)^{3/2} V\int_0^\infty\frac{\sqrt{x}\,dx}{e^x - 1} \)</span><span class="eqp">\( \displaystyle = 2.612\left(\frac{2\pi m k_{\mathrm{B}}T}{h^2}\right)^{3/2} V \)</span></div>
     <p>This is absurd as it stands, since \(N\) can’t grow as \(T^{3/2}\). It is correct for exactly one temperature, the condensation temperature:</p>
     <div class="eq"><span class="boxed">\( \displaystyle k_{\mathrm{B}}T_c = 0.527\left(\frac{h^2}{2\pi m}\right)\left(\frac{N}{V}\right)^{2/3} \)</span></div>
     <p>Above \(T_c\), \(\mu\) must be negative: a negative \(\mu\) makes the denominator larger, compensating for the rising \(T\). Below \(T_c\), the integral fails. Near \(\varepsilon = 0\), \(\sqrt{\varepsilon}/(e^{\varepsilon/k_{\mathrm{B}}T}-1) \approx k_{\mathrm{B}}T/\sqrt{\varepsilon} \to \infty\), a spike that doesn’t represent the sum over the actual, discretely spaced states. The integral still correctly counts atoms in the vast majority of states, with \(\varepsilon \gg \varepsilon_0\), so it gives the number of atoms in <em>excited</em> states, and the rest must be in the ground state:</p>
-    <div class="eq"><span class="boxed">\( \displaystyle N_{\text{excited}} = \left(\frac{T}{T_c}\right)^{3/2} N, \qquad N_0 = \left[1 - \left(\frac{T}{T_c}\right)^{3/2}\right] N \quad (T < T_c) \)</span></div>
+    <div class="eq"><span class="boxed multi"><span class="eqp">\( \displaystyle N_{\text{excited}} = \left(\frac{T}{T_c}\right)^{3/2} N, \)</span><span class="eqp">\( \displaystyle N_0 = \left[1 - \left(\frac{T}{T_c}\right)^{3/2}\right] N \quad (T < T_c) \)</span></span></div>
   </div>
 
   <div class="fig">
