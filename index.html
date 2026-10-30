@@ -162,7 +162,7 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
     <div class="panel">
       <div class="ctl">
         <label for="tS"><span class="lt">\(T/T_c\)</span> <output id="tOut"></output></label>
-        <input type="range" id="tS" min="0.02" max="2" step="0.01" value="0.6">
+        <input type="range" id="tS" aria-label="Temperature T / T_c" min="0.02" max="2" step="0.01" value="0.6">
       </div>
       <div class="big" id="n0Big">–</div>
       <p class="cap" style="margin:0 0 1rem">of the atoms are in the ground state</p>
@@ -212,7 +212,10 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
     </div>
     <div class="panel">
       <div class="ctl btns" role="group" aria-label="Number of atoms" id="finBtns"></div>
-      <p class="cap" id="finStatus" style="margin:0 0 .75rem"></p>
+      <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin:0 0 .75rem">
+        <p class="cap" id="finStatus" style="margin:0"></p>
+        <button type="button" id="finCancel" hidden>Cancel</button>
+      </div>
       <dl class="stats">
         <dt>\(N_0/N\) at \(T = T_c\)</dt><dd id="finTc">–</dd>
         <dt>\(N_0/N\) at \(T = 0.8\,T_c\)</dt><dd id="fin08">–</dd>
@@ -299,7 +302,7 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
       </div>
       <div class="ctl">
         <label for="toyE"><span class="lt">\(\varepsilon/k_{\mathrm{B}}T\)</span> <output id="toyEOut"></output></label>
-        <input type="range" id="toyE" min="0.2" max="3" step="0.05" value="1">
+        <input type="range" id="toyE" aria-label="Level spacing ε / k_B T" min="0.2" max="3" step="0.05" value="1">
       </div>
       <dl class="stats">
         <dt>Average \(N_0/N\), distinguishable</dt><dd id="tD">–</dd>
@@ -482,32 +485,61 @@ function curvesRender(){
 const FIN = {N:1000, cache:{}, busy:false};
 const FIN_T = []; for (let t=0.3; t<=1.5001; t+=0.025) FIN_T.push(+t.toFixed(3));
 const KTC1 = 0.527*8/(2*Math.PI); // k_B T_c / (h^2/8mL^2) per N^(2/3)
-function finiteCompute(N){
+// Generator: does the work in small steps (one x-row of the state count, or one bisection
+// sweep over the levels) and yields the fraction done, so selectFin can run it in time slices.
+function* finiteSteps(N){
   const c = KTC1*Math.pow(N, 2/3), tmax = FIN_T[FIN_T.length-1];
   const n2max = Math.floor(32*tmax*c) + 12, nm = Math.floor(Math.sqrt(n2max)) + 1;
   const acc = new Uint32Array(n2max + 1);
-  for (let x=1;x<=nm;x++){ const x2=x*x; if (x2>n2max) break; for (let y=1;y<=nm;y++){ const xy=x2+y*y; if (xy>n2max) break; for (let z=1;z<=nm;z++){ const s=xy+z*z; if (s>n2max) break; acc[s]++; } } }
+  for (let x=1;x<=nm;x++){ const x2=x*x; if (x2>n2max) break; for (let y=1;y<=nm;y++){ const xy=x2+y*y; if (xy>n2max) break; for (let z=1;z<=nm;z++){ const s=xy+z*z; if (s>n2max) break; acc[s]++; } } yield 0.05*x/nm; }
   const lev = [], deg = []; for (let s=3;s<=n2max;s++) if (acc[s]){ lev.push(s); deg.push(acc[s]); }
-  const L = Float64Array.from(lev), D = Float64Array.from(deg), m = L.length;
-  return FIN_T.map(t => {
-    const kT = t*c; let lo = -50*kT, hi = 3 - 1e-12;
-    for (let k=0;k<64;k++){ const mu=(lo+hi)/2; let tot=0; for (let i=0;i<m;i++){ const x=(L[i]-mu)/kT; if (x>40) break; tot += D[i]/Math.expm1(x); } (tot < N) ? lo=mu : hi=mu; }
-    return 1/Math.expm1((3 - (lo+hi)/2)/kT)/N;
-  });
+  const L = Float64Array.from(lev), D = Float64Array.from(deg), m = L.length, out = [];
+  for (let j=0;j<FIN_T.length;j++){
+    const kT = FIN_T[j]*c; let lo = -50*kT, hi = 3 - 1e-12;
+    for (let k=0;k<64;k++){ const mu=(lo+hi)/2; let tot=0; for (let i=0;i<m;i++){ const x=(L[i]-mu)/kT; if (x>40) break; tot += D[i]/Math.expm1(x); } (tot < N) ? lo=mu : hi=mu;
+      yield 0.05 + 0.95*(j*64+k+1)/(FIN_T.length*64); }
+    out.push(1/Math.expm1((3 - (lo+hi)/2)/kT)/N);
+  }
+  return out;
 }
+function finiteCompute(N){ const g = finiteSteps(N); let r; while (!(r = g.next()).done); return r.value; }
 const FIN_NS = [100, 1000, 10000, 100000];
 $('finBtns').innerHTML = FIN_NS.map(n => '<button type="button" data-fn="'+n+'">'+n.toLocaleString('en-US')+' atoms</button>').join('');
 document.querySelectorAll('[data-fn]').forEach(b => b.addEventListener('click', () => selectFin(+b.dataset.fn)));
+const finChan = new MessageChannel(); // yields to the event loop without setTimeout's 4 ms clamping
+function setFinBusy(busy){ document.querySelectorAll('[data-fn]').forEach(b => b.disabled = busy); $('finCancel').hidden = !busy; if (!busy) $('finStatus').textContent = ''; }
 function selectFin(N){
-  FIN.N = N;
+  if (FIN.job) return; // buttons are disabled while a sum is running
+  const prev = FIN.N; FIN.N = N;
   document.querySelectorAll('[data-fn]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.fn===N)));
   if (!FIN.cache[N]){
+    const job = FIN.job = {N, prev, gen: finiteSteps(N), pct: -1};
     $('finStatus').textContent = 'Summing over the box states…';
-    document.querySelectorAll('[data-fn]').forEach(b => b.disabled = true);
-    setTimeout(() => { FIN.cache[N] = finiteCompute(N); document.querySelectorAll('[data-fn]').forEach(b => b.disabled = false); $('finStatus').textContent = ''; finRender(); }, 30);
+    const hadFocus = document.activeElement && document.activeElement.matches('[data-fn]');
+    setFinBusy(true);
+    if (hadFocus) $('finCancel').focus(); // the pressed button is now disabled; keep keyboard focus nearby
+    finChan.port1.onmessage = () => {
+      if (FIN.job !== job) return; // cancelled
+      const t0 = performance.now(); let r;
+      do { r = job.gen.next(); } while (!r.done && performance.now() - t0 < 12);
+      if (r.done){ const f = document.activeElement === $('finCancel'); FIN.cache[N] = r.value; FIN.job = null; setFinBusy(false); finRender();
+        if (f) document.querySelector('[data-fn="'+N+'"]').focus(); return; }
+      const pct = Math.floor(100*r.value);
+      if (pct !== job.pct){ job.pct = pct; $('finStatus').textContent = 'Summing over the box states… ' + pct + '%'; }
+      finChan.port2.postMessage(0);
+    };
+    finChan.port2.postMessage(0);
   }
   finRender();
 }
+$('finCancel').addEventListener('click', () => {
+  const job = FIN.job; if (!job) return;
+  FIN.job = null; setFinBusy(false);
+  FIN.N = FIN.cache[job.prev] ? job.prev : FIN.N;
+  document.querySelectorAll('[data-fn]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.fn===FIN.N)));
+  finRender();
+  const sel = document.querySelector('[data-fn="'+FIN.N+'"]'); if (sel) sel.focus();
+});
 function finRender(){
   const c = finCtx; if (!c) return;
   const W=640,H=360, ax = axes(c, W, H, [50,16,16,44], [0.3,1.5], [0,1.05], [0.4,0.6,0.8,1,1.2,1.4], [0,0.25,0.5,0.75,1], [['N','i'],['0','sub'],[' / ','r'],['N','i']]);
