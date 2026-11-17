@@ -2,6 +2,24 @@
 <html lang="en-US">
 <head>
 <meta charset="utf-8">
+<!-- lang-toggle:head -->
+<script>(function(){var l='en';try{if(localStorage.getItem('lshlj82-demo-lang')==='ko')l='ko'}catch(e){}window.LANG=l;document.documentElement.dataset.lang=l;window.tr=function(en,ko){return window.LANG==='ko'&&ko!=null?ko:en};})();</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+#langBtn{position:fixed;z-index:21;top:calc(env(safe-area-inset-top,0px) + 12px);right:calc(env(safe-area-inset-right,0px) + 60px);
+  min-width:40px;height:40px;padding:0 10px;border-radius:20px;display:grid;place-items:center;cursor:pointer;font:600 14px/1 system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+  background:var(--lb-bg,rgba(255,255,255,.92));color:var(--lb-fg,#1d2633);border:1px solid var(--lb-bd,rgba(20,30,45,.18));box-shadow:0 1px 4px rgba(0,0,0,.12)}
+#langBtn:hover{border-color:currentColor}
+#langBtn:focus-visible{outline:2px solid #3b82f6;outline-offset:2px}
+:root[data-theme="dark"] #langBtn{--lb-bg:rgba(22,28,38,.92);--lb-fg:#e8eef6;--lb-bd:rgba(255,255,255,.18)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #langBtn{--lb-bg:rgba(22,28,38,.92);--lb-fg:#e8eef6;--lb-bd:rgba(255,255,255,.18)}}
+:root[data-lang="ko"] body{word-break:keep-all}
+:root[data-lang="ko"]{--sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;--serif:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;--ui-font:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+:root[data-lang="ko"] body{font-family:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif}
+
+@media print{#langBtn{display:none}}
+</style>
+<!-- lang-toggle:head-end -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bose–Einstein Condensation, Interactively</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -123,41 +141,41 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
 <div class="wrap">
 
 <header class="hero">
-  <p class="credit">An interactive demo created by Claude Opus 5.5, based on the lecture notes by Sang Hoon Lee (Chapter 7, Section 7.6, Bose–Einstein Condensation)</p>
-  <h1>Bose–Einstein Condensation</h1>
-  <p class="lede">Cool a gas of identical bosons and, below a critical temperature, a macroscopic fraction of the atoms abruptly piles into the single lowest-energy state. No need to reach absolute zero. The reason lies in how identical particles are counted.</p>
+  <p class="credit" data-k="k1">An interactive demo created by Claude Opus 5.5, based on the lecture notes by Sang Hoon Lee (Chapter 7, Section 7.6, Bose–Einstein Condensation)</p>
+  <h1 data-k="k2">Bose–Einstein Condensation</h1>
+  <p class="lede" data-k="k3">Cool a gas of identical bosons and, below a critical temperature, a macroscopic fraction of the atoms abruptly piles into the single lowest-energy state. No need to reach absolute zero. The reason lies in how identical particles are counted.</p>
 </header>
 
 <!-- ============ FIXED NUMBER ============ -->
 <section id="fixed" aria-labelledby="h-fixed">
-  <h2 id="h-fixed">Bosons whose number is fixed</h2>
+  <h2 id="h-fixed" data-k="k4">Bosons whose number is fixed</h2>
   <div class="prose">
-    <p>Photons and phonons can be created freely, so their \(\mu = 0\). Now consider more ordinary bosons, such as atoms with integer spin, whose number is fixed from the outset. Then \(\mu\) is a nontrivial function of density and temperature. At \(T = 0\), trivially, every atom is in the ground state. In a box of volume \(V = L^3\) that state has energy</p>
+    <p data-k="k5">Photons and phonons can be created freely, so their \(\mu = 0\). Now consider more ordinary bosons, such as atoms with integer spin, whose number is fixed from the outset. Then \(\mu\) is a nontrivial function of density and temperature. At \(T = 0\), trivially, every atom is in the ground state. In a box of volume \(V = L^3\) that state has energy</p>
     <div class="eq">\[ \varepsilon_0 = \frac{h^2}{8mL^2}\left(1^2 + 1^2 + 1^2\right) = \frac{3h^2}{8mL^2} \]</div>
-    <p>and at any temperature the average number of atoms in it is</p>
+    <p data-k="k6">and at any temperature the average number of atoms in it is</p>
     <div class="eq multi chain"><span class="eqp">\( \displaystyle N_0 = \frac{1}{e^{(\varepsilon_0-\mu)/k_{\mathrm{B}}T} - 1} \)</span><span class="eqp">\( \displaystyle \approx \frac{k_{\mathrm{B}}T}{\varepsilon_0 - \mu} \quad\text{when } N_0 \gg 1 \)</span></div>
-    <p>For \(N_0\) to be large, \(\mu\) must sit a tiny bit below \(\varepsilon_0\); at \(T = 0\), \(\mu = \varepsilon_0\). The question is how low the temperature must be for that to happen.</p>
+    <p data-k="k7">For \(N_0\) to be large, \(\mu\) must sit a tiny bit below \(\varepsilon_0\); at \(T = 0\), \(\mu = \varepsilon_0\). The question is how low the temperature must be for that to happen.</p>
   </div>
 </section>
 
 <!-- ============ FINDING MU ============ -->
 <section id="mu" aria-labelledby="h-mu">
-  <h2 id="h-mu">Finding the chemical potential</h2>
+  <h2 id="h-mu" data-k="k8">Finding the chemical potential</h2>
   <div class="prose">
-    <p>The condition that fixes \(\mu\) is that the occupancies of all states add up to \(N\). Converting the sum to an integral with the density of states (half that of the electrons in Section 7.3, since these bosons have spin zero),</p>
+    <p data-k="k9">The condition that fixes \(\mu\) is that the occupancies of all states add up to \(N\). Converting the sum to an integral with the density of states (half that of the electrons in Section 7.3, since these bosons have spin zero),</p>
     <div class="eq multi"><span class="eqp">\( \displaystyle N = \int_0^\infty g(\varepsilon)\,\frac{1}{e^{(\varepsilon-\mu)/k_{\mathrm{B}}T} - 1}\,d\varepsilon, \)</span><span class="eqp">\( \displaystyle g(\varepsilon) = \frac{2}{\sqrt{\pi}}\left(\frac{2\pi m}{h^2}\right)^{3/2} V\sqrt{\varepsilon} \)</span></div>
-    <p>This can’t be done analytically, so try \(\mu = 0\), which should work at very low temperature:</p>
+    <p data-k="k10">This can’t be done analytically, so try \(\mu = 0\), which should work at very low temperature:</p>
     <div class="eq multi chain"><span class="eqp">\( \displaystyle N = \frac{2}{\sqrt{\pi}}\left(\frac{2\pi m k_{\mathrm{B}}T}{h^2}\right)^{3/2} V\int_0^\infty\frac{\sqrt{x}\,dx}{e^x - 1} \)</span><span class="eqp">\( \displaystyle = 2.612\left(\frac{2\pi m k_{\mathrm{B}}T}{h^2}\right)^{3/2} V \)</span></div>
-    <p>This is absurd as it stands, since \(N\) can’t grow as \(T^{3/2}\). It is correct for exactly one temperature, the condensation temperature:</p>
+    <p data-k="k11">This is absurd as it stands, since \(N\) can’t grow as \(T^{3/2}\). It is correct for exactly one temperature, the condensation temperature:</p>
     <div class="eq"><span class="boxed">\( \displaystyle k_{\mathrm{B}}T_c = 0.527\left(\frac{h^2}{2\pi m}\right)\left(\frac{N}{V}\right)^{2/3} \)</span></div>
-    <p>Above \(T_c\), \(\mu\) must be negative: a negative \(\mu\) makes the denominator larger, compensating for the rising \(T\). Below \(T_c\), the integral fails. Near \(\varepsilon = 0\), \(\sqrt{\varepsilon}/(e^{\varepsilon/k_{\mathrm{B}}T}-1) \approx k_{\mathrm{B}}T/\sqrt{\varepsilon} \to \infty\), a spike that doesn’t represent the sum over the actual, discretely spaced states. The integral still correctly counts atoms in the vast majority of states, with \(\varepsilon \gg \varepsilon_0\), so it gives the number of atoms in <em>excited</em> states, and the rest must be in the ground state:</p>
+    <p data-k="k12">Above \(T_c\), \(\mu\) must be negative: a negative \(\mu\) makes the denominator larger, compensating for the rising \(T\). Below \(T_c\), the integral fails. Near \(\varepsilon = 0\), \(\sqrt{\varepsilon}/(e^{\varepsilon/k_{\mathrm{B}}T}-1) \approx k_{\mathrm{B}}T/\sqrt{\varepsilon} \to \infty\), a spike that doesn’t represent the sum over the actual, discretely spaced states. The integral still correctly counts atoms in the vast majority of states, with \(\varepsilon \gg \varepsilon_0\), so it gives the number of atoms in <em>excited</em> states, and the rest must be in the ground state:</p>
     <div class="eq"><span class="boxed multi"><span class="eqp">\( \displaystyle N_{\text{excited}} = \left(\frac{T}{T_c}\right)^{3/2} N, \)</span><span class="eqp">\( \displaystyle N_0 = \left[1 - \left(\frac{T}{T_c}\right)^{3/2}\right] N \quad (T < T_c) \)</span></span></div>
   </div>
 
   <div class="fig">
     <div>
       <div class="canvas-holder"><canvas id="triCanvas" aria-label="Density of states times Bose-Einstein distribution equals the particle distribution, with the ground-state population shown separately"></canvas></div>
-      <p class="cap">Energies in units of \(k_{\mathrm{B}}T_c\). The shaded area is \(N_{\text{excited}}/N\); the bar at \(\varepsilon = 0\) is the condensate, \(N_0/N\), which no smooth curve can represent.</p>
+      <p class="cap" data-k="k13">Energies in units of \(k_{\mathrm{B}}T_c\). The shaded area is \(N_{\text{excited}}/N\); the bar at \(\varepsilon = 0\) is the condensate, \(N_0/N\), which no smooth curve can represent.</p>
     </div>
     <div class="panel">
       <div class="ctl">
@@ -165,21 +183,21 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
         <input type="range" id="tS" aria-label="Temperature T / T_c" min="0.02" max="2" step="0.01" value="0.6">
       </div>
       <div class="big" id="n0Big">–</div>
-      <p class="cap" style="margin:0 0 1rem">of the atoms are in the ground state</p>
+      <p class="cap" style="margin:0 0 1rem" data-k="k14">of the atoms are in the ground state</p>
       <dl class="stats">
         <dt>\(N_{\text{excited}}/N\)</dt><dd id="nEx">–</dd>
         <dt>\(\mu/k_{\mathrm{B}}T_c\)</dt><dd id="muV">–</dd>
       </dl>
-      <p class="cap" style="margin:.75rem 0 0">Above \(T_c\), \(\mu\) is found numerically, by guessing values until the integral equals \(N\).</p>
+      <p class="cap" style="margin:.75rem 0 0" data-k="k15">Above \(T_c\), \(\mu\) is found numerically, by guessing values until the integral equals \(N\).</p>
     </div>
   </div>
 </section>
 
 <!-- ============ TRANSITION ============ -->
 <section id="transition" aria-labelledby="h-transition">
-  <h2 id="h-transition">A phase transition</h2>
+  <h2 id="h-transition" data-k="k16">A phase transition</h2>
   <div class="prose">
-    <p>Above \(T_c\), \(\mu < 0\) and essentially all of the atoms are in excited states. Below \(T_c\), \(\mu \approx 0\) and atoms accumulate abruptly in the ground state. \(N_0(T)\) is continuous but not differentiable at \(T_c\): a phase transition, Bose–Einstein condensation (BEC). These charts follow the slider above.</p>
+    <p data-k="k17">Above \(T_c\), \(\mu < 0\) and essentially all of the atoms are in excited states. Below \(T_c\), \(\mu \approx 0\) and atoms accumulate abruptly in the ground state. \(N_0(T)\) is continuous but not differentiable at \(T_c\): a phase transition, Bose–Einstein condensation (BEC). These charts follow the slider above.</p>
   </div>
   <div class="two">
     <div>
@@ -191,21 +209,21 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
     </div>
     <div>
       <div class="canvas-holder"><canvas id="muCanvas" aria-label="Chemical potential versus temperature"></canvas></div>
-      <p class="cap">\(\mu/k_{\mathrm{B}}T_c\): zero below \(T_c\), falling away above it.</p>
+      <p class="cap" data-k="k18">\(\mu/k_{\mathrm{B}}T_c\): zero below \(T_c\), falling away above it.</p>
     </div>
   </div>
   <div class="prose" style="margin-top:1.5rem">
-    <p>With the quantum volume \(v_Q = (h^2/2\pi mk_{\mathrm{B}}T)^{3/2}\), the condition at \(T_c\) reads \(N/V = 2.612/v_Q\): condensation begins just as the atoms’ wavefunctions start to overlap significantly.</p>
+    <p data-k="k19">With the quantum volume \(v_Q = (h^2/2\pi mk_{\mathrm{B}}T)^{3/2}\), the condition at \(T_c\) reads \(N/V = 2.612/v_Q\): condensation begins just as the atoms’ wavefunctions start to overlap significantly.</p>
   </div>
 
-  <h3>Real boxes hold finitely many atoms</h3>
+  <h3 data-k="k20">Real boxes hold finitely many atoms</h3>
   <div class="prose">
-    <p>The sharp kink belongs to the limit of infinitely many atoms. The lecture notes point out that for a finite number, there is a range of temperatures just below \(T_c\) where the simple picture isn’t accurate (Problem 7.66), and it need not be narrow. Here the sum over the actual box states, \(\varepsilon = (h^2/8mL^2)(n_x^2+n_y^2+n_z^2)\), is done exactly, solving for \(\mu\) at each temperature.</p>
+    <p data-k="k21">The sharp kink belongs to the limit of infinitely many atoms. The lecture notes point out that for a finite number, there is a range of temperatures just below \(T_c\) where the simple picture isn’t accurate (Problem 7.66), and it need not be narrow. Here the sum over the actual box states, \(\varepsilon = (h^2/8mL^2)(n_x^2+n_y^2+n_z^2)\), is done exactly, solving for \(\mu\) at each temperature.</p>
   </div>
   <div class="fig">
     <div>
       <div class="canvas-holder"><canvas id="finCanvas" aria-label="Exact condensate fraction for a finite number of atoms compared with the infinite limit"></canvas></div>
-      <div class="legend">
+      <div class="legend" data-k="k22">
         <span><span class="swatch line" style="background:var(--cond)"></span>Exact sum, \(N\) atoms</span>
         <span><span class="swatch dash" style="border-color:var(--ink)"></span>\(1 - (T/T_c)^{3/2}\), infinitely many atoms</span>
       </div>
@@ -214,90 +232,90 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
       <div class="ctl btns" role="group" aria-label="Number of atoms" id="finBtns"></div>
       <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin:0 0 .75rem">
         <p class="cap" id="finStatus" style="margin:0"></p>
-        <button type="button" id="finCancel" hidden>Cancel</button>
+        <button type="button" id="finCancel" hidden data-k="k23">Cancel</button>
       </div>
       <dl class="stats">
-        <dt>\(N_0/N\) at \(T = T_c\)</dt><dd id="finTc">–</dd>
-        <dt>\(N_0/N\) at \(T = 0.8\,T_c\)</dt><dd id="fin08">–</dd>
-        <dt>Infinite-\(N\) value at \(0.8\,T_c\)</dt><dd>0.284</dd>
+        <dt data-k="k24">\(N_0/N\) at \(T = T_c\)</dt><dd id="finTc">–</dd>
+        <dt data-k="k25">\(N_0/N\) at \(T = 0.8\,T_c\)</dt><dd id="fin08">–</dd>
+        <dt data-k="k26">Infinite-\(N\) value at \(0.8\,T_c\)</dt><dd>0.284</dd>
       </dl>
-      <p class="cap" style="margin:.75rem 0 0">The box walls remove low-lying states compared with the smooth \(g(\varepsilon)\), so the excited states fill up sooner and condensation sets in above \(T_c\). The curve sharpens only slowly as \(N\) grows.</p>
+      <p class="cap" style="margin:.75rem 0 0" data-k="k27">The box walls remove low-lying states compared with the smooth \(g(\varepsilon)\), so the excited states fill up sooner and condensation sets in above \(T_c\). The curve sharpens only slowly as \(N\) grows.</p>
     </div>
   </div>
 </section>
 
 <!-- ============ SCALES ============ -->
 <section id="scales" aria-labelledby="h-scales">
-  <h2 id="h-scales">How cold is cold enough?</h2>
+  <h2 id="h-scales" data-k="k28">How cold is cold enough?</h2>
   <div class="prose">
-    <p>Numerically, \(T_c\) is very small in all realistic experiments, but not as small as you might guess. A <em>single</em> particle in a box is reasonably likely to be in the ground state only when \(k_{\mathrm{B}}T\) is of order \(\varepsilon_0\). With many bosons, most are in the ground state at temperatures only somewhat below \(T_c\), and \(k_{\mathrm{B}}T_c\) exceeds \(\varepsilon_0\) by a factor of order \(N^{2/3}\). The hierarchy is \((\varepsilon_0 - \mu) \ll \varepsilon_0 \ll k_{\mathrm{B}}T_c\).</p>
+    <p data-k="k29">Numerically, \(T_c\) is very small in all realistic experiments, but not as small as you might guess. A <em>single</em> particle in a box is reasonably likely to be in the ground state only when \(k_{\mathrm{B}}T\) is of order \(\varepsilon_0\). With many bosons, most are in the ground state at temperatures only somewhat below \(T_c\), and \(k_{\mathrm{B}}T_c\) exceeds \(\varepsilon_0\) by a factor of order \(N^{2/3}\). The hierarchy is \((\varepsilon_0 - \mu) \ll \varepsilon_0 \ll k_{\mathrm{B}}T_c\).</p>
   </div>
   <div class="fig">
     <div>
       <div class="canvas-holder"><canvas id="ladCanvas" aria-label="Logarithmic energy axis showing the single-particle levels, the chemical potential, and the condensation temperature"></canvas></div>
-      <p class="cap">A logarithmic energy axis, measured from the bottom of the box, so the three scales fit on one line. Tick marks are the actual single-particle levels of the box; \(\mu\) is shown at \(T = T_c/2\).</p>
+      <p class="cap" data-k="k30">A logarithmic energy axis, measured from the bottom of the box, so the three scales fit on one line. Tick marks are the actual single-particle levels of the box; \(\mu\) is shown at \(T = T_c/2\).</p>
     </div>
     <div class="panel">
       <div class="ctl">
-        <label for="atomSel"><span class="lt">Atom</span></label>
+        <label for="atomSel" data-k="k31"><span class="lt">Atom</span></label>
         <select id="atomSel">
-          <option value="rb">Rubidium-87</option>
-          <option value="na">Sodium-23</option>
-          <option value="he">Helium-4</option>
+          <option value="rb"><span data-k="k32">Rubidium-87</span></option>
+          <option value="na"><span data-k="k33">Sodium-23</span></option>
+          <option value="he"><span data-k="k34">Helium-4</span></option>
         </select>
       </div>
       <div class="ctl">
-        <label for="nDen"><span class="lt">Density \(N/V\)</span> <output id="nDenOut"></output></label>
+        <label for="nDen"><span data-k="k35"><span class="lt">Density \(N/V\)</span></span> <output id="nDenOut"></output></label>
         <input type="range" id="nDen" min="17" max="29" step="0.01" value="19">
       </div>
       <div class="ctl">
-        <label for="nAt"><span class="lt">Number of atoms \(N\)</span> <output id="nAtOut"></output></label>
+        <label for="nAt"><span data-k="k36"><span class="lt">Number of atoms \(N\)</span></span> <output id="nAtOut"></output></label>
         <input type="range" id="nAt" min="2" max="9" step="0.01" value="4">
       </div>
       <div class="big" id="tcBig">–</div>
-      <p class="cap" style="margin:0 0 .75rem">condensation temperature \(T_c\)</p>
+      <p class="cap" style="margin:0 0 .75rem" data-k="k37">condensation temperature \(T_c\)</p>
       <dl class="stats">
-        <dt>Box size \(L\)</dt><dd id="sL">–</dd>
+        <dt data-k="k38">Box size \(L\)</dt><dd id="sL">–</dd>
         <dt>\(\varepsilon_0/k_{\mathrm{B}}\)</dt><dd id="sE0">–</dd>
         <dt>\(k_{\mathrm{B}}T_c/\varepsilon_0\)</dt><dd id="sRatio">–</dd>
-        <dt>\((\varepsilon_0-\mu)/\varepsilon_0\) at \(T_c/2\)</dt><dd id="sMu">–</dd>
+        <dt data-k="k39">\((\varepsilon_0-\mu)/\varepsilon_0\) at \(T_c/2\)</dt><dd id="sMu">–</dd>
       </dl>
     </div>
   </div>
-  <p class="prose note" style="margin-top:1.25rem">In the experiments of Figure 7.35 (C. E. Wieman, 1996), rubidium-87 atoms held in a magnetic trap were imaged after the trap was switched off, so the pictures map their velocities. Above \(T_c\), at 200 nK, the cloud is broad and isotropic, as Maxwell–Boltzmann predicts; at 100 nK a dense, elongated condensate appears; near \(T = 0\) essentially all atoms are in it. Real traps are harmonic rather than boxes, so this calculator gives only an order-of-magnitude estimate for them. For liquid helium-4, the ideal-gas formula gives about 3.1 K, close to the 2.17 K at which helium actually becomes superfluid, even though the atoms in a liquid interact strongly.</p>
+  <p class="prose note" style="margin-top:1.25rem" data-k="k40">In the experiments of Figure 7.35 (C. E. Wieman, 1996), rubidium-87 atoms held in a magnetic trap were imaged after the trap was switched off, so the pictures map their velocities. Above \(T_c\), at 200 nK, the cloud is broad and isotropic, as Maxwell–Boltzmann predicts; at 100 nK a dense, elongated condensate appears; near \(T = 0\) essentially all atoms are in it. Real traps are harmonic rather than boxes, so this calculator gives only an order-of-magnitude estimate for them. For liquid helium-4, the ideal-gas formula gives about 3.1 K, close to the 2.17 K at which helium actually becomes superfluid, even though the atoms in a liquid interact strongly.</p>
 </section>
 
 <!-- ============ WHY ============ -->
 <section id="why" aria-labelledby="h-why">
-  <h2 id="h-why">Why does it happen?</h2>
+  <h2 id="h-why" data-k="k41">Why does it happen?</h2>
   <div class="prose">
-    <p>Consider first \(N\) <em>distinguishable</em>, noninteracting particles in a box. Each, separately, has a decent chance of occupying any of the roughly \(Z_1\) single-particle states with energy up to about \(k_{\mathrm{B}}T\), so its chance of being in the ground state is only about \(1/Z_1\). Only a tiny fraction end up there: no condensation.</p>
-    <p>Look at the whole system at once, though, and there seems to be a paradox. The system state with every particle in the ground state has Boltzmann factor \(e^{0} = 1\), while a typical state with \(U \approx Nk_{\mathrm{B}}T\) has \(e^{-N} \ll 1\). The resolution is that a state is not an energy level. Any particular state with energy of order \(Nk_{\mathrm{B}}T\) is improbable, but there are so many of them that together they win, like the odds of an individual winning the lottery versus the odds that <em>someone</em> does. For distinguishable particles the number of arrangements is \(Z_1^N\), easily beating \(e^{-N}\).</p>
-    <p>For identical bosons, only the occupation numbers matter, and the count is much smaller:</p>
+    <p data-k="k42">Consider first \(N\) <em>distinguishable</em>, noninteracting particles in a box. Each, separately, has a decent chance of occupying any of the roughly \(Z_1\) single-particle states with energy up to about \(k_{\mathrm{B}}T\), so its chance of being in the ground state is only about \(1/Z_1\). Only a tiny fraction end up there: no condensation.</p>
+    <p data-k="k43">Look at the whole system at once, though, and there seems to be a paradox. The system state with every particle in the ground state has Boltzmann factor \(e^{0} = 1\), while a typical state with \(U \approx Nk_{\mathrm{B}}T\) has \(e^{-N} \ll 1\). The resolution is that a state is not an energy level. Any particular state with energy of order \(Nk_{\mathrm{B}}T\) is improbable, but there are so many of them that together they win, like the odds of an individual winning the lottery versus the odds that <em>someone</em> does. For distinguishable particles the number of arrangements is \(Z_1^N\), easily beating \(e^{-N}\).</p>
+    <p data-k="k44">For identical bosons, only the occupation numbers matter, and the count is much smaller:</p>
     <div class="eq">\[ \binom{N + Z_1 - 1}{N} \sim \begin{cases} (eZ_1/N)^N & Z_1 \gg N \\ (eN/Z_1)^{Z_1} & Z_1 \ll N \end{cases} \]</div>
-    <p>When \(Z_1 \gg N\), excited states still dominate, as for distinguishable particles. When \(Z_1 \ll N\), the count can’t compensate for \(e^{-N}\): states with all bosons excited become exponentially improbable. The combinatorics gets about one boson into each available excited state, and the rest condense.</p>
+    <p data-k="k45">When \(Z_1 \gg N\), excited states still dominate, as for distinguishable particles. When \(Z_1 \ll N\), the count can’t compensate for \(e^{-N}\): states with all bosons excited become exponentially improbable. The combinatorics gets about one boson into each available excited state, and the rest condense.</p>
   </div>
 
-  <h3>A toy model you can count exactly</h3>
-  <p class="prose">One ground state at energy 0, and \(Z_1\) excited states, all at energy \(\varepsilon\). For distinguishable particles, \(P(k\ \text{excited}) \propto \binom{N}{k} Z_1^k e^{-k\varepsilon/k_{\mathrm{B}}T}\). For identical bosons, \(P(k) \propto \binom{k + Z_1 - 1}{k} e^{-k\varepsilon/k_{\mathrm{B}}T}\). The chart shows the resulting probability of each ground-state population, and the boxes show one system state drawn at random from each.</p>
+  <h3 data-k="k46">A toy model you can count exactly</h3>
+  <p class="prose" data-k="k47">One ground state at energy 0, and \(Z_1\) excited states, all at energy \(\varepsilon\). For distinguishable particles, \(P(k\ \text{excited}) \propto \binom{N}{k} Z_1^k e^{-k\varepsilon/k_{\mathrm{B}}T}\). For identical bosons, \(P(k) \propto \binom{k + Z_1 - 1}{k} e^{-k\varepsilon/k_{\mathrm{B}}T}\). The chart shows the resulting probability of each ground-state population, and the boxes show one system state drawn at random from each.</p>
   <div class="fig">
     <div>
       <div class="canvas-holder"><canvas id="toyCanvas" aria-label="Probability distribution of the ground-state population for distinguishable particles and identical bosons"></canvas></div>
-      <div class="legend">
+      <div class="legend" data-k="k48">
         <span><span class="swatch" style="background:var(--dist)"></span>Distinguishable particles</span>
         <span><span class="swatch" style="background:var(--cond)"></span>Identical bosons</span>
       </div>
       <div class="canvas-holder" style="margin-top:.75rem"><canvas id="boxCanvas" aria-label="One randomly drawn system state for each kind of particle"></canvas></div>
-      <div class="legend"><button type="button" id="resample">Draw new system states</button></div>
+      <div class="legend"><button type="button" id="resample" data-k="k49">Draw new system states</button></div>
     </div>
     <div class="panel">
-      <div class="ctl btns"><button type="button" id="lectureToy">Lecture example: 100 bosons, 25 states</button></div>
+      <div class="ctl btns"><button type="button" id="lectureToy" data-k="k50">Lecture example: 100 bosons, 25 states</button></div>
       <div class="ctl">
-        <label for="toyN"><span class="lt">Particles \(N\)</span> <output id="toyNOut"></output></label>
+        <label for="toyN"><span data-k="k51"><span class="lt">Particles \(N\)</span></span> <output id="toyNOut"></output></label>
         <input type="range" id="toyN" min="10" max="400" step="1" value="100">
       </div>
       <div class="ctl">
-        <label for="toyZ"><span class="lt">Excited states \(Z_1\)</span> <output id="toyZOut"></output></label>
+        <label for="toyZ"><span data-k="k52"><span class="lt">Excited states \(Z_1\)</span></span> <output id="toyZOut"></output></label>
         <input type="range" id="toyZ" min="0" max="4" step="0.01" value="1.398">
       </div>
       <div class="ctl">
@@ -305,32 +323,32 @@ button.theme-btn svg{width:20px; height:20px; fill:none; stroke:currentColor; st
         <input type="range" id="toyE" aria-label="Level spacing ε / k_B T" min="0.2" max="3" step="0.05" value="1">
       </div>
       <dl class="stats">
-        <dt>Average \(N_0/N\), distinguishable</dt><dd id="tD">–</dd>
-        <dt>Average \(N_0/N\), bosons</dt><dd id="tB">–</dd>
+        <dt data-k="k53">Average \(N_0/N\), distinguishable</dt><dd id="tD">–</dd>
+        <dt data-k="k54">Average \(N_0/N\), bosons</dt><dd id="tB">–</dd>
         <dt class="sep"></dt>
         <dt>\(e^{-N}\)</dt><dd id="tBoltz">–</dd>
-        <dt>Arrangements, distinguishable</dt><dd id="tCD">–</dd>
-        <dt>Arrangements, bosons</dt><dd id="tCB">–</dd>
+        <dt data-k="k55">Arrangements, distinguishable</dt><dd id="tCD">–</dd>
+        <dt data-k="k56">Arrangements, bosons</dt><dd id="tCB">–</dd>
       </dl>
-      <p class="cap" style="margin:.75rem 0 0">The arrangement counts are for all \(N\) particles excited.</p>
+      <p class="cap" style="margin:.75rem 0 0" data-k="k57">The arrangement counts are for all \(N\) particles excited.</p>
     </div>
   </div>
 </section>
 
 <!-- ============ CLOSING ============ -->
 <section id="quantum" aria-labelledby="h-quantum">
-  <h2 id="h-quantum">A truly quantum phenomenon</h2>
+  <h2 id="h-quantum" data-k="k58">A truly quantum phenomenon</h2>
   <div class="prose">
-    <p>The explanation of BEC lies in the combinatorics of counting arrangements of identical particles. How do we know bosons of a given species really are identical, and that every distinct state of the system deserves the same statistical weight? Good theoretical answers need more quantum mechanics, and even they aren’t completely airtight: some undiscovered interaction might yet tell the atoms apart and make a condensate spontaneously evaporate. So far, no such interaction seems to exist. Invoking Occam’s razor, Schroeder concludes, tentatively, that bosons of a given species are truly indistinguishable, quoting David Griffiths:</p>
-    <blockquote>“even God cannot tell them apart.”</blockquote>
+    <p data-k="k59">The explanation of BEC lies in the combinatorics of counting arrangements of identical particles. How do we know bosons of a given species really are identical, and that every distinct state of the system deserves the same statistical weight? Good theoretical answers need more quantum mechanics, and even they aren’t completely airtight: some undiscovered interaction might yet tell the atoms apart and make a condensate spontaneously evaporate. So far, no such interaction seems to exist. Invoking Occam’s razor, Schroeder concludes, tentatively, that bosons of a given species are truly indistinguishable, quoting David Griffiths:</p>
+    <blockquote data-k="k60">“even God cannot tell them apart.”</blockquote>
   </div>
 </section>
 </div>
 
 <footer>
   <div class="wrap">
-    <p>Created by Claude Opus 5.5, based on the lecture notes by Sang Hoon Lee on quantum statistics (Section 7.6, Bose–Einstein Condensation, with a look at Problem 7.66).</p>
-    <p>Constants: \(h = 6.626 \times 10^{-34}\ \mathrm{J\,s}\), \(k_{\mathrm{B}} = 1.381 \times 10^{-23}\ \mathrm{J/K}\), \(\zeta(3/2) = 2.612\), \(\int_0^\infty \sqrt{x}/(e^x-1)\,dx = 2.31516\). Equations typeset with MathJax.</p>
+    <p data-k="k61">Created by Claude Opus 5.5, based on the lecture notes by Sang Hoon Lee on quantum statistics (Section 7.6, Bose–Einstein Condensation, with a look at Problem 7.66).</p>
+    <p data-k="k62">Constants: \(h = 6.626 \times 10^{-34}\ \mathrm{J\,s}\), \(k_{\mathrm{B}} = 1.381 \times 10^{-23}\ \mathrm{J/K}\), \(\zeta(3/2) = 2.612\), \(\int_0^\infty \sqrt{x}/(e^x-1)\,dx = 2.31516\). Equations typeset with MathJax.</p>
   </div>
 </footer>
 
@@ -344,8 +362,8 @@ function readColors(){
   ['bg','surface','ink','muted','rule','band','cond','exc','dist','res','warn'].forEach(k => C[k] = cs.getPropertyValue('--'+k).trim());
 }
 readColors();
-const SANS = '"Instrument Sans", system-ui, sans-serif';
-const SERIF = '"Newsreader", Georgia, serif';
+const SANS = '"Instrument Sans", "IBM Plex Sans KR", system-ui, sans-serif';
+const SERIF = '"Newsreader", "IBM Plex Sans KR", Georgia, serif';
 function fit(cv, LW, LH){
   const w = cv.parentElement.clientWidth || LW, hgt = w*LH/LW;
   cv.style.height = hgt + 'px';
@@ -406,7 +424,7 @@ function triRender(){
   const c = triCtx; if (!c) return;
   const W=700,H=280; c.clearRect(0,0,W,H); c.fillStyle=C.surface; c.fillRect(0,0,W,H);
   const pw = 196, gap = 40, x0s = [18, 18+pw+gap, 18+2*(pw+gap)], T0 = 44, B = 48, xmax = 3;
-  const titles = ['Density of states', 'Bose–Einstein distribution', 'Particle distribution'];
+  const titles = [tr('Density of states','상태 밀도'), tr('Bose–Einstein distribution','보스–아인슈타인 분포'), tr('Particle distribution','입자 분포')];
   const fn = [
     x => Math.sqrt(x),
     x => { const d = Math.expm1((x - mu)/t); return d > 0 ? 1/d : Infinity; },
@@ -437,7 +455,7 @@ function triRender(){
     // say what happens off the top of the panel
     if (p > 0 && val(xs[1]) > ymaxs[p]){
       c.fillStyle = p===2 ? C.exc : C.muted; c.font='12px '+SANS; c.textAlign='left';
-      const msg = p===1 ? (t <= 1 ? '↑ diverges as ε → μ ≈ 0' : '↑ continues off the scale') : (t <= 1 ? '↑ ∝ 1/√ε, but the area is finite' : '');
+      const msg = p===1 ? (t <= 1 ? tr('↑ diverges as ε → μ ≈ 0','↑ ε → μ ≈ 0에서 발산') : tr('↑ continues off the scale','↑ 눈금 밖으로 계속')) : (t <= 1 ? tr('↑ ∝ 1/√ε, but the area is finite','↑ ∝ 1/√ε, 하지만 넓이는 유한') : '');
       if (msg) c.fillText(msg, x0 + 16, T0 - 2);
     }
   });
@@ -449,7 +467,7 @@ function triRender(){
   // condensate bar on the product panel
   { const x0=x0s[2], top = T0, bh = n0*(H-T0-B); c.fillStyle=C.cond; c.fillRect(x0+2, H-B-bh, 9, bh);
     if (n0 > 0.005){ c.font='600 12px '+SANS; c.textAlign='left'; c.fillStyle=C.cond; c.fillText('N₀/N = ' + n0.toFixed(2), x0+16, Math.max(top+12, H-B-bh+12)); } }
-  c.fillStyle=C.exc; c.font='12px '+SANS; c.textAlign='right'; c.fillText('area = ' + nex.toFixed(2), x0s[2]+pw-4, T0+40);
+  c.fillStyle=C.exc; c.font='12px '+SANS; c.textAlign='right'; c.fillText(tr('area = ','넓이 = ') + nex.toFixed(2), x0s[2]+pw-4, T0+40);
 }
 $('tS').addEventListener('input', e => { tT = +e.target.value; triRender(); curvesRender(); });
 
@@ -472,7 +490,7 @@ function curvesRender(){
     const c = nCtx; const ax = axes(c, W, H, box, [0,2], [0,1.08], [0,0.5,1,1.5,2], [0,0.5,1], [['N','i'],[' / ','r'],['N','i']]);
     c.strokeStyle=C.rule; c.setLineDash([3,4]); c.beginPath(); c.moveTo(ax.X(1),16); c.lineTo(ax.X(1),H-44); c.stroke(); c.setLineDash([]);
     [[n0Of, C.cond],[t => 1-n0Of(t), C.exc]].forEach(([f,col]) => { c.strokeStyle=col; c.lineWidth=2.6; c.beginPath(); for (let i=0;i<=300;i++){ const t=2*i/300; const y=ax.Y(f(t)); i?c.lineTo(ax.X(t),y):c.moveTo(ax.X(t),y); } c.stroke(); c.fillStyle=col; c.beginPath(); c.arc(ax.X(tT), ax.Y(f(tT)), 5, 0, 7); c.fill(); });
-    c.fillStyle=C.muted; rich(c, ax.X(1)+6, ax.Y(0.1), 14, [['kink at ','s'],['T','i'],[' = ','r'],['T','i'],['c','isub']], 'left');
+    c.fillStyle=C.muted; rich(c, ax.X(1)+6, ax.Y(0.1), 14, (LANG==='ko' ? [['T','i'],[' = ','r'],['T','i'],['c','isub'],['에서 꺾임','s']] : [['kink at ','s'],['T','i'],[' = ','r'],['T','i'],['c','isub']]), 'left');
   }
   if (muCtx){
     const c = muCtx; const ax = axes(c, W, H, box, [0,2], [-0.9,0.1], [0,0.5,1,1.5,2], [0,-0.4,-0.8], [['μ','i'],[' / ','r'],['k','i'],['B','sub'],['T','i'],['c','isub']]);
@@ -504,7 +522,9 @@ function* finiteSteps(N){
 }
 function finiteCompute(N){ const g = finiteSteps(N); let r; while (!(r = g.next()).done); return r.value; }
 const FIN_NS = [100, 1000, 10000, 100000];
-$('finBtns').innerHTML = FIN_NS.map(n => '<button type="button" data-fn="'+n+'">'+n.toLocaleString('en-US')+' atoms</button>').join('');
+$('finBtns').innerHTML = FIN_NS.map(n => '<button type="button" data-fn="'+n+'">'+n.toLocaleString('en-US')+'<span data-atoms></span></button>').join('');
+const setAtoms = () => document.querySelectorAll('[data-atoms]').forEach(s => s.textContent = tr(' atoms','개'));
+setAtoms(); window.addEventListener('langchange', setAtoms);
 document.querySelectorAll('[data-fn]').forEach(b => b.addEventListener('click', () => selectFin(+b.dataset.fn)));
 const finChan = new MessageChannel(); // yields to the event loop without setTimeout's 4 ms clamping
 function setFinBusy(busy){ document.querySelectorAll('[data-fn]').forEach(b => b.disabled = busy); $('finCancel').hidden = !busy; if (!busy) $('finStatus').textContent = ''; }
@@ -514,7 +534,7 @@ function selectFin(N){
   document.querySelectorAll('[data-fn]').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.fn===N)));
   if (!FIN.cache[N]){
     const job = FIN.job = {N, prev, gen: finiteSteps(N), pct: -1};
-    $('finStatus').textContent = 'Summing over the box states…';
+    $('finStatus').textContent = tr('Summing over the box states…','상자 상태에 대해 합하는 중…');
     const hadFocus = document.activeElement && document.activeElement.matches('[data-fn]');
     setFinBusy(true);
     if (hadFocus) $('finCancel').focus(); // the pressed button is now disabled; keep keyboard focus nearby
@@ -525,7 +545,7 @@ function selectFin(N){
       if (r.done){ const f = document.activeElement === $('finCancel'); FIN.cache[N] = r.value; FIN.job = null; setFinBusy(false); finRender();
         if (f) document.querySelector('[data-fn="'+N+'"]').focus(); return; }
       const pct = Math.floor(100*r.value);
-      if (pct !== job.pct){ job.pct = pct; $('finStatus').textContent = 'Summing over the box states… ' + pct + '%'; }
+      if (pct !== job.pct){ job.pct = pct; $('finStatus').textContent = tr('Summing over the box states… ','상자 상태에 대해 합하는 중… ') + pct + '%'; }
       finChan.port2.postMessage(0);
     };
     finChan.port2.postMessage(0);
@@ -590,20 +610,20 @@ function scalesRender(){
   c.strokeStyle=C.muted; c.lineWidth=1;
   let lastX = -10;
   for (let s=3;s<seen.length;s++) if (seen[s]){ const px = X(s); if (px - lastX < 1.2) continue; lastX = px; c.beginPath(); c.moveTo(px, y-12); c.lineTo(px, y); c.stroke(); }
-  if (smax >= 4000){ c.fillStyle=C.muted; c.font='11px '+SANS; c.textAlign='right'; c.fillText('levels beyond this are too dense to draw', W-R0, y-18); }
+  if (smax >= 4000){ c.fillStyle=C.muted; c.font='11px '+SANS; c.textAlign='right'; c.fillText(tr('levels beyond this are too dense to draw','이보다 높은 준위는 너무 촘촘해서 그리지 않음'), W-R0, y-18); }
   const mark = (v, col, labelParts, up) => {
     const px = X(v); c.strokeStyle=col; c.lineWidth=2.4; c.beginPath(); c.moveTo(px, up ? y-40 : y); c.lineTo(px, up ? y : y+40); c.stroke();
     c.fillStyle=col; c.beginPath(); if (up){ c.moveTo(px, y-2); c.lineTo(px-5, y-12); c.lineTo(px+5, y-12); } else { c.moveTo(px, y+2); c.lineTo(px-5, y+12); c.lineTo(px+5, y+12); } c.closePath(); c.fill();
     rich(c, px, up ? y-48 : y+60, 15, labelParts, 'center');
   };
   mark(3, C.cond, [['ε','i'],['0','sub']], true);
-  mark(6, C.muted, [['first excited, 2','s'],['ε','i'],['0','sub']], false);
+  mark(6, C.muted, [[tr('first excited, 2','첫 들뜬 상태, 2'),'s'],['ε','i'],['0','sub']], false);
   mark(kB*Tc/e1, C.exc, [['k','i'],['B','sub'],['T','i'],['c','isub']], true);
   // epsilon0 - mu shown as a small bracket at the far left
   const gx = X(gapMu/e1);
   c.strokeStyle=C.warn; c.lineWidth=2.4; c.beginPath(); c.moveTo(gx, y-40); c.lineTo(gx, y); c.stroke();
   c.fillStyle=C.warn; rich(c, Math.max(gx, L0+50), y-48, 15, [['ε','i'],['0','sub'],[' − ','r'],['μ','i']], 'center');
-  c.fillStyle=C.muted; c.font='12px '+SANS; c.textAlign='left'; c.fillText('energy, log scale →', L0, H-12);
+  c.fillStyle=C.muted; c.font='12px '+SANS; c.textAlign='left'; c.fillText(tr('energy, log scale →','에너지, 로그 눈금 →'), L0, H-12);
 }
 $('atomSel').addEventListener('change', e => { SC.atom = e.target.value; SC.ln = ATOMS[SC.atom].n; $('nDen').value = SC.ln.toFixed(2); scalesRender(); });
 $('nDen').addEventListener('input', e => { SC.ln = +e.target.value; scalesRender(); });
@@ -650,8 +670,8 @@ function toyRender(resample){
     const X = f => L + f*(W-L-R), Y = p => H-B - p/pm*(H-T-B);
     c.font='12px '+SANS; c.fillStyle=C.muted; c.textAlign='center';
     [0,0.25,0.5,0.75,1].forEach(v => { c.strokeStyle=C.band; c.lineWidth=1; c.beginPath(); c.moveTo(X(v),T); c.lineTo(X(v),H-B); c.stroke(); c.fillText(v, X(v), H-B+16); });
-    c.fillStyle=C.muted; rich(c, W-R-2, H-8, 14, [['ground-state fraction ','s'],['N','i'],['0','sub'],[' / ','r'],['N','i']], 'right');
-    rich(c, L+6, T+12, 14, [['probability','s']], 'left');
+    c.fillStyle=C.muted; rich(c, W-R-2, H-8, 14, [[tr('ground-state fraction ','바닥 상태 비율 '),'s'],['N','i'],['0','sub'],[' / ','r'],['N','i']], 'right');
+    rich(c, L+6, T+12, 14, [[tr('probability','확률'),'s']], 'left');
     const bw = Math.max(1.5, (W-L-R)/(N+1));
     [[dist.d, C.dist],[dist.b, C.cond]].forEach(([p,col]) => { c.fillStyle=col; c.globalAlpha=0.8; p.forEach((v,k) => { if (v < pm*1e-4) return; const f=(N-k)/N; const y=Y(v); c.fillRect(X(f)-bw/2, y, bw, H-B-y); }); c.globalAlpha=1; });
     c.strokeStyle=C.muted; c.lineWidth=1; c.beginPath(); c.moveTo(L,T); c.lineTo(L,H-B); c.lineTo(W-R,H-B); c.stroke();
@@ -679,12 +699,12 @@ function toyRender(resample){
       const gy = 32 + Math.ceil(S.shown/3)*(bh+16) + 6;
       const n0 = boson ? N - S.kb : N - S.kd;
       fillBox(x0 + (bw+gapx)/2, gy, n0, boson ? null : S.dGround, boson, true);
-      b.fillStyle=C.muted; b.font='11px '+SANS; b.textAlign='left'; b.fillText('ground state', x0 + (bw+gapx)/2 + 2*bw + gapx + 6, gy + bh/2 + 4);
+      b.fillStyle=C.muted; b.font='11px '+SANS; b.textAlign='left'; b.fillText(tr('ground state','바닥 상태'), x0 + (bw+gapx)/2 + 2*bw + gapx + 6, gy + bh/2 + 4);
     };
-    drawSide(20, 'Distinguishable particles', false);
-    drawSide(340, 'Identical bosons', true);
+    drawSide(20, tr('Distinguishable particles','구별 가능한 입자'), false);
+    drawSide(340, tr('Identical bosons','동일한 보손'), true);
     b.fillStyle=C.muted; b.font='11px '+SANS; b.textAlign='left';
-    b.fillText(S.shown < Z ? 'Showing ' + S.shown + ' of the ' + Math.round(Z).toLocaleString('en-US') + ' excited states, above the ground state. Numbers count particles per box.' : 'All ' + Z + ' excited states, above the ground state. Numbers count particles per box.', 20, H-8);
+    b.fillText(S.shown < Z ? tr('Showing ' + S.shown + ' of the ' + Math.round(Z).toLocaleString('en-US') + ' excited states, above the ground state. Numbers count particles per box.', '들뜬 상태 ' + Math.round(Z).toLocaleString('en-US') + '개 가운데 ' + S.shown + '개를 바닥 상태 위에 표시. 숫자는 상자마다의 입자 수.') : tr('All ' + Z + ' excited states, above the ground state. Numbers count particles per box.', '들뜬 상태 ' + Z + '개 전체를 바닥 상태 위에 표시. 숫자는 상자마다의 입자 수.'), 20, H-8);
   }
 }
 $('toyN').addEventListener('input', e => { TOY.N = +e.target.value; toyRender(true); });
@@ -706,6 +726,7 @@ function layout(){
   redrawAll();
 }
 function redrawAll(){ triRender(); curvesRender(); finRender(); scalesRender(); toyRender(false); }
+window.addEventListener('langchange', redrawAll);
 let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(layout, 80); });
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { readColors(); redrawAll(); });
 new MutationObserver(() => { readColors(); redrawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -721,13 +742,110 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(redrawAll)
   const SUN = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>';
   const MOON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>';
   const current = () => root.dataset.theme || (mq.matches ? "dark" : "light");
-  const sync = () => { const dark = current() === "dark", label = dark ? "Switch to light mode" : "Switch to dark mode";
+  const sync = () => { const dark = current() === "dark", label = dark ? tr("Switch to light mode","밝은 화면으로 전환") : tr("Switch to dark mode","어두운 화면으로 전환");
     btn.innerHTML = dark ? SUN : MOON; btn.setAttribute("aria-label", label); btn.title = label; };
   btn.addEventListener("click", () => { const next = current() === "dark" ? "light" : "dark"; root.dataset.theme = next;
     try { localStorage.setItem("netsci-theme", next); } catch (e) {} sync(); });
   mq.addEventListener("change", sync);
+  window.addEventListener("langchange", sync);
   sync();
 })();
 </script>
+<!-- lang-toggle:body -->
+<script>
+window.I18N_KO={
+"__title": "보스–아인슈타인 응축",
+"k1": "이상훈 교수의 강의 노트(7장 7.6절, 보스–아인슈타인 응축)를 바탕으로 Claude Opus 5.5가 만든 인터랙티브 데모",
+"k2": "보스–아인슈타인 응축",
+"k3": "동일한 보손으로 이루어진 기체를 식히면, 임계 온도 아래에서 원자 가운데 거시적인 비율이 갑자기 에너지가 가장 낮은 단일 상태로 몰려듭니다. 절대 영도까지 갈 필요는 없습니다. 그 이유는 동일한 입자를 세는 방식에 있습니다.",
+"k4": "개수가 정해진 보손",
+"k5": "광자와 포논은 자유롭게 생겨날 수 있으므로 \\(\\mu = 0\\)입니다. 이제 정수 스핀을 가진 원자처럼 처음부터 개수가 정해진 좀 더 평범한 보손을 생각해 봅시다. 그러면 \\(\\mu\\)는 밀도와 온도의 자명하지 않은 함수가 됩니다. \\(T = 0\\)에서는 당연히 모든 원자가 바닥 상태에 있습니다. 부피 \\(V = L^3\\)인 상자에서 그 상태의 에너지는",
+"k6": "이고, 임의의 온도에서 그 상태에 있는 원자 수의 평균은",
+"k7": "\\(N_0\\)가 크려면 \\(\\mu\\)가 \\(\\varepsilon_0\\)보다 아주 조금만 낮아야 합니다. \\(T = 0\\)에서는 \\(\\mu = \\varepsilon_0\\)입니다. 문제는 그렇게 되려면 온도가 얼마나 낮아야 하느냐입니다.",
+"k8": "화학 퍼텐셜 구하기",
+"k9": "\\(\\mu\\)를 정하는 조건은 모든 상태의 점유수를 더하면 \\(N\\)이 된다는 것입니다. 상태 밀도를 써서 합을 적분으로 바꾸면(이 보손은 스핀이 0이므로 상태 밀도는 7.3절 전자의 절반),",
+"k10": "이 적분은 해석적으로 풀 수 없으니, 아주 낮은 온도에서 성립할 것 같은 \\(\\mu = 0\\)을 넣어 봅시다:",
+"k11": "이대로는 말이 안 됩니다. \\(N\\)이 \\(T^{3/2}\\)처럼 늘어날 수는 없으니까요. 이 식은 딱 한 온도, 응축 온도에서만 맞습니다:",
+"k12": "\\(T_c\\)보다 높으면 \\(\\mu\\)는 음수여야 합니다. 음의 \\(\\mu\\)가 분모를 키워 늘어나는 \\(T\\)를 보상합니다. \\(T_c\\)보다 낮으면 적분이 맞지 않습니다. \\(\\varepsilon = 0\\) 근처에서 \\(\\sqrt{\\varepsilon}/(e^{\\varepsilon/k_{\\mathrm{B}}T}-1) \\approx k_{\\mathrm{B}}T/\\sqrt{\\varepsilon} \\to \\infty\\)로 치솟는데, 이것은 실제로 띄엄띄엄 놓인 상태들에 대한 합을 나타내지 못합니다. 그래도 적분은 \\(\\varepsilon \\gg \\varepsilon_0\\)인 대다수 상태에 있는 원자 수는 바르게 세므로, <em>들뜬<\/em> 상태에 있는 원자 수를 주고, 나머지는 바닥 상태에 있어야 합니다:",
+"k13": "에너지는 \\(k_{\\mathrm{B}}T_c\\) 단위입니다. 색칠한 넓이가 \\(N_{\\text{excited}}/N\\)이고, \\(\\varepsilon = 0\\)의 막대가 응축체 \\(N_0/N\\)이며, 이것은 어떤 매끄러운 곡선으로도 나타낼 수 없습니다.",
+"k14": "의 원자가 바닥 상태에 있습니다",
+"k15": "\\(T_c\\)보다 높을 때는 적분이 \\(N\\)과 같아질 때까지 값을 바꿔 가며 \\(\\mu\\)를 수치적으로 구합니다.",
+"k16": "상전이",
+"k17": "\\(T_c\\)보다 높으면 \\(\\mu < 0\\)이고 원자는 사실상 모두 들뜬 상태에 있습니다. \\(T_c\\)보다 낮으면 \\(\\mu \\approx 0\\)이고 원자가 갑자기 바닥 상태에 쌓입니다. \\(N_0(T)\\)는 \\(T_c\\)에서 연속이지만 미분 가능하지 않습니다: 상전이, 곧 보스–아인슈타인 응축(BEC)입니다. 이 그래프들은 위의 조절 막대를 따라갑니다.",
+"k18": "\\(\\mu/k_{\\mathrm{B}}T_c\\): \\(T_c\\) 아래에서는 0이고, 위에서는 점점 내려갑니다.",
+"k19": "양자 부피 \\(v_Q = (h^2/2\\pi mk_{\\mathrm{B}}T)^{3/2}\\)를 쓰면 \\(T_c\\)에서의 조건은 \\(N/V = 2.612/v_Q\\)입니다: 원자들의 파동함수가 크게 겹치기 시작할 때 응축이 시작됩니다.",
+"k20": "실제 상자에는 원자가 유한 개 들어 있다",
+"k21": "날카롭게 꺾이는 모양은 원자가 무한히 많은 극한의 것입니다. 강의 노트가 지적하듯, 원자 수가 유한하면 \\(T_c\\) 바로 아래에 단순한 그림이 정확하지 않은 온도 구간이 있으며(문제 7.66), 이 구간이 좁다는 보장도 없습니다. 여기서는 실제 상자 상태 \\(\\varepsilon = (h^2/8mL^2)(n_x^2+n_y^2+n_z^2)\\)에 대한 합을 정확히 계산하고, 온도마다 \\(\\mu\\)를 풉니다.",
+"k22": "<span><span class=\"swatch line\" style=\"background:var(--cond)\"><\/span>정확한 합, 원자 \\(N\\)개<\/span>\n        <span><span class=\"swatch dash\" style=\"border-color:var(--ink)\"><\/span>\\(1 - (T/T_c)^{3/2}\\), 원자가 무한히 많을 때<\/span>",
+"k23": "취소",
+"k24": "\\(T = T_c\\)에서 \\(N_0/N\\)",
+"k25": "\\(T = 0.8\\,T_c\\)에서 \\(N_0/N\\)",
+"k26": "\\(0.8\\,T_c\\)에서 무한 \\(N\\)의 값",
+"k27": "상자의 벽은 매끄러운 \\(g(\\varepsilon)\\)에 비해 낮은 에너지 상태를 줄이므로, 들뜬 상태가 더 빨리 차고 응축이 \\(T_c\\)보다 높은 온도에서 시작됩니다. 곡선은 \\(N\\)이 커져도 천천히만 날카로워집니다.",
+"k28": "얼마나 차가워야 충분할까?",
+"k29": "수치로 보면 \\(T_c\\)는 현실적인 모든 실험에서 아주 작지만, 생각만큼 작지는 않습니다. 상자 속 입자 <em>하나<\/em>가 바닥 상태에 있을 가능성이 꽤 되려면 \\(k_{\\mathrm{B}}T\\)가 \\(\\varepsilon_0\\) 정도여야 합니다. 보손이 많으면 \\(T_c\\)보다 조금만 낮은 온도에서도 대부분이 바닥 상태에 있고, \\(k_{\\mathrm{B}}T_c\\)는 \\(\\varepsilon_0\\)보다 대략 \\(N^{2/3}\\)배 큽니다. 크기의 순서는 \\((\\varepsilon_0 - \\mu) \\ll \\varepsilon_0 \\ll k_{\\mathrm{B}}T_c\\)입니다.",
+"k30": "세 가지 척도가 한 줄에 들어가도록 상자의 바닥에서부터 잰 에너지를 로그 축으로 그렸습니다. 눈금은 상자의 실제 단일 입자 준위이고, \\(\\mu\\)는 \\(T = T_c/2\\)에서의 값입니다.",
+"k31": "<span class=\"lt\">원자<\/span>",
+"k32": "루비듐-87",
+"k33": "나트륨-23",
+"k34": "헬륨-4",
+"k35": "<span class=\"lt\">밀도 \\(N/V\\)<\/span>",
+"k36": "<span class=\"lt\">원자 수 \\(N\\)<\/span>",
+"k37": "응축 온도 \\(T_c\\)",
+"k38": "상자 크기 \\(L\\)",
+"k39": "\\(T_c/2\\)에서 \\((\\varepsilon_0-\\mu)/\\varepsilon_0\\)",
+"k40": "그림 7.35의 실험(C. E. Wieman, 1996)에서는 자기 덫에 가둔 루비듐-87 원자를 덫을 끈 뒤에 촬영했으므로, 사진은 원자들의 속도 분포를 보여 줍니다. \\(T_c\\)보다 높은 200 nK에서는 맥스웰–볼츠만 분포가 예측하듯 구름이 넓고 등방적이며, 100 nK에서는 밀도가 높고 길쭉한 응축체가 나타나고, \\(T = 0\\) 근처에서는 사실상 모든 원자가 응축체에 있습니다. 실제 덫은 상자가 아니라 조화 퍼텐셜이므로, 이 계산기는 대략적인 크기만 알려 줍니다. 액체 헬륨-4에 대해 이상 기체 공식은 약 3.1 K를 주는데, 액체 속 원자들이 강하게 상호작용하는데도 헬륨이 실제로 초유체가 되는 2.17 K에 가깝습니다.",
+"k41": "왜 이런 일이 일어날까?",
+"k42": "먼저 상자 속에 상호작용하지 않는 <em>구별 가능한<\/em> 입자 \\(N\\)개가 있다고 합시다. 각 입자는 에너지가 대략 \\(k_{\\mathrm{B}}T\\)까지인 단일 입자 상태 약 \\(Z_1\\)개 가운데 어디에든 있을 가능성이 비슷하므로, 바닥 상태에 있을 확률은 약 \\(1/Z_1\\)에 불과합니다. 바닥 상태에 가는 입자는 극히 일부뿐이니 응축이 일어나지 않습니다.",
+"k43": "그런데 계 전체를 한꺼번에 보면 역설처럼 보이는 것이 있습니다. 모든 입자가 바닥 상태에 있는 계의 상태는 볼츠만 인자가 \\(e^{0} = 1\\)인 반면, \\(U \\approx Nk_{\\mathrm{B}}T\\)인 전형적인 상태는 \\(e^{-N} \\ll 1\\)입니다. 답은 상태가 에너지 준위가 아니라는 데 있습니다. 에너지가 \\(Nk_{\\mathrm{B}}T\\) 정도인 특정한 상태 하나하나는 일어나기 어렵지만, 그런 상태가 워낙 많아서 모두 합치면 이깁니다. 특정한 사람이 복권에 당첨될 확률과 <em>누군가<\/em> 당첨될 확률의 차이와 같습니다. 구별 가능한 입자에서는 배치의 수가 \\(Z_1^N\\)이라 \\(e^{-N}\\)을 쉽게 이깁니다.",
+"k44": "동일한 보손에서는 점유수만 중요하므로 셈이 훨씬 작습니다:",
+"k45": "\\(Z_1 \\gg N\\)이면 구별 가능한 입자처럼 여전히 들뜬 상태가 우세합니다. \\(Z_1 \\ll N\\)이면 이 셈으로는 \\(e^{-N}\\)을 보상할 수 없습니다: 모든 보손이 들뜬 상태는 지수적으로 일어나기 어려워집니다. 경우의 수는 들뜬 상태마다 보손을 대략 하나씩 넣어 주고, 나머지는 응축합니다.",
+"k46": "정확히 셀 수 있는 장난감 모형",
+"k47": "에너지 0인 바닥 상태 하나와, 에너지가 모두 \\(\\varepsilon\\)인 들뜬 상태 \\(Z_1\\)개가 있습니다. 구별 가능한 입자에서는 \\(P(k\\ \\text{excited}) \\propto \\binom{N}{k} Z_1^k e^{-k\\varepsilon/k_{\\mathrm{B}}T}\\)이고, 동일한 보손에서는 \\(P(k) \\propto \\binom{k + Z_1 - 1}{k} e^{-k\\varepsilon/k_{\\mathrm{B}}T}\\)입니다. 그래프는 이로부터 얻은 바닥 상태 입자 수의 확률이고, 상자들은 각 경우에서 무작위로 뽑은 계의 상태 하나입니다.",
+"k48": "<span><span class=\"swatch\" style=\"background:var(--dist)\"><\/span>구별 가능한 입자<\/span>\n        <span><span class=\"swatch\" style=\"background:var(--cond)\"><\/span>동일한 보손<\/span>",
+"k49": "계의 상태 새로 뽑기",
+"k50": "강의 예: 보손 100개, 상태 25개",
+"k51": "<span class=\"lt\">입자 수 \\(N\\)<\/span>",
+"k52": "<span class=\"lt\">들뜬 상태 수 \\(Z_1\\)<\/span>",
+"k53": "평균 \\(N_0/N\\), 구별 가능",
+"k54": "평균 \\(N_0/N\\), 보손",
+"k55": "배치의 수, 구별 가능",
+"k56": "배치의 수, 보손",
+"k57": "배치의 수는 \\(N\\)개 입자가 모두 들뜬 경우입니다.",
+"k58": "진정한 양자 현상",
+"k59": "BEC는 동일한 입자의 배치를 세는 조합론으로 설명됩니다. 어떤 종류의 보손이 정말 동일하며, 계의 서로 다른 상태가 모두 같은 통계적 가중치를 받아야 한다는 것을 어떻게 알까요? 좋은 이론적 답에는 양자역학이 더 필요하고, 그마저도 완전히 빈틈이 없지는 않습니다. 아직 발견되지 않은 어떤 상호작용이 원자들을 구별해서 응축체를 저절로 증발시킬지도 모릅니다. 지금까지 그런 상호작용은 없는 것 같습니다. 오컴의 면도날에 기대어 Schroeder는 조심스럽게, 같은 종류의 보손은 정말 구별할 수 없다고 결론짓고 David Griffiths의 말을 인용합니다:",
+"k60": "“신조차 그들을 구별할 수 없다.”",
+"k61": "양자 통계에 관한 이상훈 교수의 강의 노트(7.6절, 보스–아인슈타인 응축, 문제 7.66 포함)를 바탕으로 Claude Opus 5.5가 만들었습니다.",
+"k62": "상수: \\(h = 6.626 \\times 10^{-34}\\ \\mathrm{J\\,s}\\), \\(k_{\\mathrm{B}} = 1.381 \\times 10^{-23}\\ \\mathrm{J/K}\\), \\(\\zeta(3/2) = 2.612\\), \\(\\int_0^\\infty \\sqrt{x}/(e^x-1)\\,dx = 2.31516\\). 수식은 MathJax로 조판했습니다."
+};
+(function(){
+  // English / 한국어 switch shared by the course demos; the choice is remembered across pages
+  var KEY='lshlj82-demo-lang', root=document.documentElement, KO=window.I18N_KO||{}, EN={};
+  var els=[].slice.call(document.querySelectorAll('[data-k]'));
+  els.forEach(function(e){EN[e.getAttribute('data-k')]=e.innerHTML;});
+  var titleEN=document.title;
+  var btn=document.createElement('button');btn.id='langBtn';btn.type='button';document.body.appendChild(btn);
+  function typeset(list){
+    if(!list.length)return;
+    if(window.MathJax&&MathJax.typesetPromise){var go=function(){MathJax.typesetPromise(list).catch(function(){});};
+      if(MathJax.startup&&MathJax.startup.promise)MathJax.startup.promise.then(go);else go();}
+    if(window.renderMathInElement&&window.KATEX_OPTS)list.forEach(function(e){try{renderMathInElement(e,window.KATEX_OPTS)}catch(_){}}); 
+  }
+  function apply(l,first){
+    window.LANG=l;root.dataset.lang=l;root.lang=l;var changed=[];
+    els.forEach(function(e){var k=e.getAttribute('data-k'),s=(l==='ko'&&KO[k]!=null)?KO[k]:EN[k];if(e.innerHTML!==s){e.innerHTML=s;changed.push(e);}});
+    document.title=(l==='ko'&&KO.__title)?KO.__title:titleEN;
+    btn.textContent=l==='ko'?'EN':'한국어';btn.setAttribute('aria-label',l==='ko'?'View in English':'한국어로 보기');btn.title=btn.getAttribute('aria-label');
+    btn.setAttribute('lang',l==='ko'?'en':'ko');
+    if(!first)typeset(changed);
+    window.dispatchEvent(new CustomEvent('langchange',{detail:{lang:l}}));
+    // canvases drawn before the Korean web font arrives are redrawn once it has loaded
+    if(l==='ko'&&document.fonts&&!document.fonts.check('16px "IBM Plex Sans KR"','가'))document.fonts.load('16px "IBM Plex Sans KR"','가').then(function(){if(window.LANG==='ko')window.dispatchEvent(new CustomEvent('langchange',{detail:{lang:'ko'}}));}).catch(function(){});
+  }
+  btn.addEventListener('click',function(){var n=window.LANG==='ko'?'en':'ko';try{localStorage.setItem(KEY,n)}catch(e){}apply(n,false);});
+  apply(window.LANG||'en',true);
+})();
+</script>
+<!-- lang-toggle:body-end -->
 </body>
 </html>
